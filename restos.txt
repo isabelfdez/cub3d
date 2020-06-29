@@ -1,0 +1,91 @@
+/*void	check_map_closed(t_data *data)
+{
+	int		l;
+	int		*n;
+
+	l = 0;
+	n = malloc(sizeof(int) * ft_strlen(data->map[0]));
+	set_zeros(n, (int)ft_strlen(data->map[0]));
+	if (!(try_map(data->map2, l, n)))  Aquí deberíamos salir si el mapa es válido 
+	{
+		ft_putstr_fd("Error\nMap not closed", 2);
+		exit(EXIT_FAILURE);
+	}
+}*/
+/* Esta debería devolver el número de la última línea 
+** u otra cosa en caso de que el mapa sea válido */
+/*int		try_map(char **map, int l, int *n)
+{
+	int		*n2;
+	int		len;
+
+	len = (int)ft_strlen(map[0]);
+	n2 = malloc(sizeof(int) * len);
+	while (map[l + 1])
+	{
+		set_zeros(n, len);
+		set_zeros(n2, len);
+		set_ones(n, map[l]);
+		set_ones(n2, map[l + 1]);
+		if (!(compare_lines(n, n2, map, l)))
+			return (0);
+		l++;
+		Tendremos que comprobar aparte la última fila
+	}
+	return (1);
+}*/
+
+/*int		compare_lines(int *n, int *n2, char **map, int l)
+{
+	int		i;
+	int		j;
+	int		h;
+
+	i = 0;
+	j = (int)ft_strlen(map[0]);
+	while (i < j)
+	{
+		if (n[i] == 1 && n2[i] == 0)
+		{
+			if ((h = adjacent_ones(n, i, j)) < 2)
+			{
+				if (adjacent_ones2(map, l, i) == 0)
+					return (0);
+				if ((adjacent_ones2(map, l, i) == 1) && h == 0)
+					return (0);
+			}
+		}
+		i++;
+	}
+	return (1);
+}*/
+
+// Falta ver que la primera línea tenga solo espacios o 1
+// Lo mismo con la última línea
+// Que los espacios estén rodeados de 1's
+// La idea es hacer un mapa alternativo en el que todos los 1's
+// que tengan en las 8 casillas que le rodean por lo menos un espacio
+// se cambien por ceros. Con esto los unos que están encerrados
+// no dan problemas
+
+/*void	check_map_closed(t_data *data)
+{
+	int		i;
+	int		j;
+
+	j = 0;
+	while (data->map[j])  Hay que ver qué hacemos si no encuentra ningún 1 
+	{
+		i = 0;
+		while (data->map[j][i] && data->map[j][i] != '1')
+			i++;
+		j++;
+	}
+	if (j >= data->l || i >= data->c)
+	{
+		ft_putstr_fd("Error\nInvalid map", 2);
+		exit(EXIT_FAILURE);
+	}
+	else
+		map_graph(data);
+}*/
