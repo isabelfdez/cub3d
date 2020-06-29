@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 20:15:19 by aserrano          #+#    #+#             */
-/*   Updated: 2020/06/27 13:44:29 by marvin           ###   ########.fr       */
+/*   Updated: 2020/06/29 17:12:46 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,37 +135,39 @@ int		adjacent_ones2(char **map, int l, int i)
 		data->map2[l][c] = '0';
 }*/
 
-/* This function returns the degree of a vertex in a graph (map)
-** where 1 means it is connected to another vertex */
+/*
+** This function returns the degree of a vertex in a graph (map)
+** where 1 means it is connected to another vertex 
+*/
 
-int		deg_vtx(char **map, int l, int c)
+int		deg_vtx(t_data *data, int l, int c)
 {
 	int	d;
 
 	d = 0;
-	if (map[l - 1][c] && map[l - 1][c] == 1)
+	if (l > 0 && data->map2[l - 1][c] == '1')
 		d++;
-	if (map[l + 1][c] && map[l + 1][c] == 1)
+	if (l < data->l - 1 && data->map2[l + 1][c] == '1')
 		d++;
-	if (map[l][c - 1] && map[l][c - 1] == 1)
+	if (c > 0 && data->map2[l][c - 1] == '1')
 		d++;
-	if (map[l][c + 1] && map[l][c + 1] == 1)
+	if (c < data->c - 1 && data->map2[l][c + 1] == '1')
 		d++;
 	return (d);
 }
 
 void	check_one(t_data *data, int l, int c)
 {
-	if (deg_vtx(data->map, l, c) < 2)
+	if (deg_vtx(data, l, c) < 2)
 	{
 		data->map2[l][c] = '0';
-		if (data->map[l - 1][c] && data->map[l - 1][c] == 1)
+		if (l > 0 && data->map2[l - 1][c] == '1')
 			check_one(data, l - 1, c);
-		if (data->map[l + 1][c] && data->map[l + 1][c] == 1)
+		else if (l < data->l - 1 && data->map2[l + 1][c] == '1')
 			check_one(data, l + 1, c);
-		if (data->map[l][c - 1] && data->map[l][c - 1] == 1)
+		else if (c > 0 && data->map2[l][c - 1] == '1')
 			check_one(data, l, c - 1);
-		if (data->map[l][c + 1] && data->map[l][c + 1] == 1)
+		else if (c < data->c - 1 && data->map2[l][c + 1] == '1')
 			check_one(data, l, c + 1);
 	}
 }
@@ -183,6 +185,46 @@ int		find_ones(t_data *data)
 		{
 			if (data->map2[l][c] == '1')
 				return (1);
+			c++;
+		}
+		l++;
+	}
+	return (0);
+}
+
+int		line_character(t_data *data)
+{
+	int		l;
+	int		c;
+
+	l = 0;
+	while (data->map[l])
+	{
+		c = 0;
+		while (data->map[l][c])
+		{
+			if (ft_isalpha(data->map[l][c]))
+				return (l);
+			c++;
+		}
+		l++;
+	}
+	return (0);
+}
+
+int		col_character(t_data *data)
+{
+	int		l;
+	int		c;
+
+	l = 0;
+	while (data->map[l])
+	{
+		c = 0;
+		while (data->map[l][c])
+		{
+			if (ft_isalpha(data->map[l][c]))
+				return (c);
 			c++;
 		}
 		l++;

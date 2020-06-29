@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/06/27 13:34:58 by marvin           ###   ########.fr       */
+/*   Updated: 2020/06/29 16:50:54 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,9 @@ int		try_map(char **map, int l, int *n);
 int		compare_lines(int *n, int *n2, char **map, int l);
 
 void	map_graph(t_data *data);
+void	check_character(t_data *data);
+int		check_line_char(t_data *data, int l);
+int		check_col_char(t_data *data, int c);
 
 int		skip_spaces(char *str, int i);
 int		skip_spa_com(char *str, int i);
@@ -64,8 +67,10 @@ void	set_ones(int *n, char *str);
 int		adjacent_ones(int *n, int j, int len);
 int		adjacent_ones2(char **map, int l, int i);
 void	adjacent_spa(t_data *data, int l, int c);
-int		deg_vtx(char **map, int l, int c);
+int		deg_vtx(t_data *data, int l, int c);
 void	check_one(t_data *data, int l, int c);
 int		find_ones(t_data *data);
+int		line_character(t_data *data);
+int		col_character(t_data *data);
 
 #endif

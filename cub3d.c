@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/06/27 13:56:12 by marvin           ###   ########.fr       */
+/*   Updated: 2020/06/29 17:30:34 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,7 @@ void	fill_map(t_data *data, int jcpy[], char *aux)
 	free(aux);
 	alter_map(data);
 	check_map_content(data);
-	check_map_closed(data);
+	map_graph(data);
 	/*int		i = 0;
 	while (i < l)
 	{	
@@ -207,9 +207,10 @@ void	alter_map(t_data *data) /* Las filas no está NULL-terminated */
 			data->map2[l][c] = data->map[l][c];
 			c++;
 		}
-		data->map[l][c] = '\0';
+		data->map2[l][c] = '\0';
 		l++;
 	}
+	data->map2[l] = NULL;
 }
 /* This function checks that all the components of the map
 ** are numbers between 0 and 2, except for the character
@@ -247,13 +248,13 @@ void	check_map_content(t_data *data)
 	}
 }
 
-void	check_map_closed(t_data *data)
+/*void	check_map_closed(t_data *data)
 {
 	int		i;
 	int		j;
 
 	j = 0;
-	while (data->map[j]) /* Hay que ver qué hacemos si no encuentra ningún 1 */
+	while (data->map[j])  Hay que ver qué hacemos si no encuentra ningún 1 
 	{
 		i = 0;
 		while (data->map[j][i] && data->map[j][i] != '1')
@@ -267,7 +268,7 @@ void	check_map_closed(t_data *data)
 	}
 	else
 		map_graph(data);
-}
+}*/
 
 /* j es la línea e i es la columna */
 
@@ -283,15 +284,86 @@ void	map_graph(t_data *data)
 		while (data->map[j][i])
 		{
 			if (data->map[j][i] == '1')
-				check_one(data, i, j);
+				check_one(data, j, i);
+			i++;
 		}
+		j++;
 	}
 	if (!find_ones(data))
 	{
 		ft_putstr_fd("Error\nInvalid map", 2);
 		exit(EXIT_FAILURE);
 	}
-	/* Después de esto habría que comprobar que el personaje esté dentro del espacio cerrado */
+	check_character(data);
+}
+
+void	check_character(t_data *data)
+{
+	int	l;
+	int	c;
+
+	l = line_character(data);
+	c = col_character(data);
+	if (!check_line_char(data, l))
+	{
+		ft_putstr_fd("Error\nCharacter outside of closed space", 2);
+		exit(EXIT_FAILURE);
+	}
+	if (!check_col_char(data, c))
+	{
+		ft_putstr_fd("Error\nCharacter outside of closed space", 2);
+		exit(EXIT_FAILURE);
+	}
+}
+
+int		check_line_char(t_data *data, int l)
+{
+	int c;
+	int l2;
+	int	j;
+	(void)l;
+
+	c = 0;
+	while (c < data->c)
+	{
+		l2 = 0;
+		j = 0;
+		while (l2 < data->l)
+		{
+			if (data->map2[l2][c] == '1')
+				j++;
+			l2++;
+		}
+		if (j < 2)
+			return (0);
+		c++;
+	}
+	return (1);
+}
+
+int		check_col_char(t_data *data, int c)
+{
+	int l;
+	int c2;
+	int j;
+	(void)c;
+
+	l = 0;
+	while(l < data->l)
+	{
+		c2 = 0;
+		j = 0;
+		while (c2 < data->c)
+		{
+			if (data->map2[l][c2] == '1')
+				j++;
+			c2++;
+		}
+		if (j < 2)
+			return (0);
+		l++;
+	}
+	return (1);
 }
 
 /*void	check_map_closed(t_data *data)
