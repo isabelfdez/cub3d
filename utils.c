@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 20:15:19 by aserrano          #+#    #+#             */
-/*   Updated: 2020/06/29 17:12:46 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/06/30 17:03:53 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,4 +230,22 @@ int		col_character(t_data *data)
 		l++;
 	}
 	return (0);
+}
+
+t_dvector	create_dvec(double i, double j)
+{
+	t_dvector	vector;
+
+	vector.x = i;
+	vector.y = j;
+	return (vector);
+}
+
+t_ivector	create_ivec(int i, int j)
+{
+	t_ivector	vector;
+
+	vector.x = i;
+	vector.y = j;
+	return (vector);
 }

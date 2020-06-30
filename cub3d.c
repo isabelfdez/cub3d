@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/06/29 20:09:51 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/06/30 20:38:17 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,6 +237,7 @@ void	check_map_content(t_data *data)
 			{
 				n--;
 				c++;
+				data->dir1 = data->map[l][c];
 			}
 			else
 			{
@@ -273,6 +274,7 @@ void	map_graph(t_data *data)
 		exit(EXIT_FAILURE);
 	}
 	check_character(data);
+	start_raycasting(data);
 }
 
 void	check_character(t_data *data)
@@ -344,3 +346,133 @@ int		check_col_char(t_data *data, int c)
 	return (1);
 }
 
+void	start_raycasting(t_data *data)
+{
+	t_player	*player;
+	int			x;
+
+	write(1, "raycasting\n", 11);
+	x = -1;
+	if (!(player = malloc(sizeof(t_player))))
+		return ;
+	player->pos.x = col_character(data);
+	player->pos.y = line_character(data);
+	if (data->dir1 == 'N')
+		player->dir = create_dvec(0, 1);
+	else if (data->dir1 == 'S')
+		player->dir = create_dvec(0, -1);
+	else if (data->dir1 == 'E')
+		player->dir = create_dvec(1, 0);
+	else if (data->dir1 == 'W')
+		player->dir = create_dvec(-1, 0);
+	player->cam_plane = create_dvec(0.66 * fabs(player->dir.y), 0.66 * fabs(player->dir.x)); // No estoy muy segura de esto
+	while (++x < data->resx)
+	{
+		calculations_ray(player, x, data->resx);
+		initialDDA(player);
+		DDA(player, data);
+		fishEye(player);
+		draw_line(x, player, data);
+	}
+}
+
+void	calculations_ray(t_player *player, int x, int resx)
+{
+	write(1, "calculations\n", 13);
+	player->cameraX = 2 * x / (double)resx - 1;
+	player->ray_pos.x = player->pos.x;
+	player->ray_pos.y = player->pos.y;
+	player->ray_dir.x = player->dir.x + player->cam_plane.x * player->cameraX;
+	player->ray_dir.y = player->dir.y + player->cam_plane.y * player->cameraX;
+	player->map.x = (int)player->pos.x;
+	player->map.y = (int)player->pos.y;
+	player->delta_dist.x =  1 / player->ray_dir.x;
+	player->delta_dist.x = 1 / player->ray_dir.y;
+	//player->delta_dist.x = (player->ray_dir.y == 0) ? 0 : ((player->ray_dir.x == 0) ? 1 : fabs(1 / player->ray_dir.x));
+    //player->delta_dist.y = (player->ray_dir.x == 0) ? 0 : ((player->ray_dir.y == 0) ? 1 : fabs(1 / player->ray_dir.y));
+	player->hit = 0;
+	player->side = 0;
+	player->step = create_ivec(0, 0);
+}
+
+/* 
+** The DDA algorithm will always jump exactly one square each loop, either a 
+** square in the x-direction, or a square in the y-direction. If it has to go 
+** in the negative or positive x-direction, and the negative or positive 
+** y-direction will depend on the direction of the ray, and this fact will be 
+** stored in step.x and step.y. Those variables are always either -1 or +1.
+*/
+
+void	initialDDA(t_player *player)
+{
+	write(1, "iDDA\n", 5);
+	if (player->ray_dir.x < 0)
+	{
+		player->step.x = -1;
+		player->side_dist.x = (player->ray_pos.x - player->map.x) * player->delta_dist.x;
+	}
+	else
+	{
+		player->step.x = 1;
+		player->side_dist.x = (player->map.x + 1 - player->ray_pos.x) * player->delta_dist.x;
+	}
+	if (player->ray_dir.y < 0)
+	{
+		player->step.y = -1;
+		player->side_dist.y = (player->ray_pos.y - player->map.y) * player->delta_dist.y;
+	}
+	else
+	{
+		player->step.y = 1;
+		player->side_dist.y = (player->map.y + 1 - player->ray_pos.y) * player->delta_dist.y;
+	}
+}
+
+void	DDA(t_player *player, t_data *data)
+{
+	write(1, "DDA\n", 4);
+	while (player->hit == 0)
+	{
+		if (player->side_dist.x > player->side_dist.y)
+		{
+			player->side_dist.x += player->delta_dist.x;
+			player->map.x += player->step.x;
+			player->side = 0;
+		}
+		else
+		{
+			player->side_dist.y += player->delta_dist.y;
+			player->map.y += player->step.y;
+			player->side = 1;
+		}
+		printf("x %d, y %d \n", player->map.x, player->map.y);
+		//if (data->map[player->map.x][player->map.y] != 0)
+			//player->hit = 1;
+	}
+}
+
+void	fishEye(t_player *player)
+{
+	write(1, "fE\n", 3);
+	if (player->side == 0)
+		player->pwd = (player->map.x - player->ray_pos.x + (1 - player->step.x) / 2) / player->ray_dir.x;
+	else
+		player->pwd = (player->map.y - player->ray_pos.y + (1 - player->step.y) / 2) / player->ray_dir.y;
+}
+
+void	draw_line(int x, t_player *player, t_data *data)
+{
+	write(1, "draw\n", 5);
+	int		line_h;
+	int		start;
+	int		end;
+
+	line_h = data->resy / (int)player->pwd;
+	start = -line_h / 2 + data->resy / 2;
+	end = line_h / 2 + data->resy / 2;
+	if (start < 0)
+		start = 0;
+	if (end > data->resy)
+		end = data->resy - 1;
+	//verLine(x, start, end, data);
+}
