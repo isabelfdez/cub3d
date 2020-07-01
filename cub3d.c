@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/06/30 20:38:17 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/01 19:12:52 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,9 +235,9 @@ void	check_map_content(t_data *data)
 				c++;
 			else if (map_letters(data->map[l][c]) && n == 1)
 			{
+				data->dir1 = data->map[l][c];
 				n--;
 				c++;
-				data->dir1 = data->map[l][c];
 			}
 			else
 			{
@@ -351,43 +351,44 @@ void	start_raycasting(t_data *data)
 	t_player	*player;
 	int			x;
 
-	write(1, "raycasting\n", 11);
-	x = -1;
+	x = 0;
+	openWindow(data);
 	if (!(player = malloc(sizeof(t_player))))
 		return ;
-	player->pos.x = col_character(data);
-	player->pos.y = line_character(data);
+	player->pos.x = col_character(data) + 0.5;
+	player->pos.y = line_character(data) + 0.5;
 	if (data->dir1 == 'N')
-		player->dir = create_dvec(0, 1);
-	else if (data->dir1 == 'S')
 		player->dir = create_dvec(0, -1);
+	else if (data->dir1 == 'S')
+		player->dir = create_dvec(0, 1);
 	else if (data->dir1 == 'E')
-		player->dir = create_dvec(1, 0);
-	else if (data->dir1 == 'W')
 		player->dir = create_dvec(-1, 0);
+	else if (data->dir1 == 'W')
+		player->dir = create_dvec(1, 0);
 	player->cam_plane = create_dvec(0.66 * fabs(player->dir.y), 0.66 * fabs(player->dir.x)); // No estoy muy segura de esto
-	while (++x < data->resx)
+	while (x < data->resx)
 	{
 		calculations_ray(player, x, data->resx);
 		initialDDA(player);
 		DDA(player, data);
 		fishEye(player);
 		draw_line(x, player, data);
+		x++;
 	}
+	mlx_loop(data->mlx_ptr);
 }
 
 void	calculations_ray(t_player *player, int x, int resx)
 {
-	write(1, "calculations\n", 13);
 	player->cameraX = 2 * x / (double)resx - 1;
-	player->ray_pos.x = player->pos.x;
-	player->ray_pos.y = player->pos.y;
 	player->ray_dir.x = player->dir.x + player->cam_plane.x * player->cameraX;
 	player->ray_dir.y = player->dir.y + player->cam_plane.y * player->cameraX;
 	player->map.x = (int)player->pos.x;
 	player->map.y = (int)player->pos.y;
-	player->delta_dist.x =  1 / player->ray_dir.x;
-	player->delta_dist.x = 1 / player->ray_dir.y;
+	player->delta_dist.x = sqrt(1 + (pow(player->ray_dir.y, 2) / pow(player->ray_dir.x, 2)));
+	player->delta_dist.y = sqrt(1 + (pow(player->ray_dir.x, 2) / pow(player->ray_dir.y, 2)));
+	//player->delta_dist.x =  fabs(1 / player->ray_dir.x);
+	//player->delta_dist.x = fabs(1 / player->ray_dir.y);
 	//player->delta_dist.x = (player->ray_dir.y == 0) ? 0 : ((player->ray_dir.x == 0) ? 1 : fabs(1 / player->ray_dir.x));
     //player->delta_dist.y = (player->ray_dir.x == 0) ? 0 : ((player->ray_dir.y == 0) ? 1 : fabs(1 / player->ray_dir.y));
 	player->hit = 0;
@@ -405,35 +406,34 @@ void	calculations_ray(t_player *player, int x, int resx)
 
 void	initialDDA(t_player *player)
 {
-	write(1, "iDDA\n", 5);
 	if (player->ray_dir.x < 0)
 	{
 		player->step.x = -1;
-		player->side_dist.x = (player->ray_pos.x - player->map.x) * player->delta_dist.x;
+		player->side_dist.x = fabs((player->pos.x - player->map.x) * player->delta_dist.x);
 	}
 	else
 	{
 		player->step.x = 1;
-		player->side_dist.x = (player->map.x + 1 - player->ray_pos.x) * player->delta_dist.x;
+		player->side_dist.x = fabs((player->map.x + 1.0 - player->pos.x) * player->delta_dist.x);
 	}
 	if (player->ray_dir.y < 0)
 	{
 		player->step.y = -1;
-		player->side_dist.y = (player->ray_pos.y - player->map.y) * player->delta_dist.y;
+		player->side_dist.y = fabs((player->pos.y - player->map.y) * player->delta_dist.y);
 	}
 	else
 	{
 		player->step.y = 1;
-		player->side_dist.y = (player->map.y + 1 - player->ray_pos.y) * player->delta_dist.y;
+		player->side_dist.y = fabs((player->map.y + 1.0 - player->pos.y) * player->delta_dist.y);
 	}
 }
 
 void	DDA(t_player *player, t_data *data)
 {
-	write(1, "DDA\n", 4);
 	while (player->hit == 0)
 	{
-		if (player->side_dist.x > player->side_dist.y)
+		printf("mapx %i mapy %i stepx %i stepy %i\n", player->map.x, player->map.y, player->step.x, player->step.y);
+		if (player->side_dist.x <= player->side_dist.y)
 		{
 			player->side_dist.x += player->delta_dist.x;
 			player->map.x += player->step.x;
@@ -445,34 +445,37 @@ void	DDA(t_player *player, t_data *data)
 			player->map.y += player->step.y;
 			player->side = 1;
 		}
-		printf("x %d, y %d \n", player->map.x, player->map.y);
-		//if (data->map[player->map.x][player->map.y] != 0)
-			//player->hit = 1;
+		//printf("x %d, y %d \n", player->map.x, player->map.y);
+		if (data->map[player->map.y][player->map.x] != '0')
+			player->hit = 1;
 	}
+	printf("hit en x = %i y = %i\n", player->map.x, player->map.y);
 }
 
 void	fishEye(t_player *player)
 {
-	write(1, "fE\n", 3);
+	printf("mapx %i mapy %i stepx %i stepy %i raydirx %f raydiry %f side dist_x %f side dist_y %f\n", player->map.x, player->map.y, 
+		player->step.x, player->step.y, player->ray_dir.x, player->ray_dir.y, player->side_dist.x, player->side_dist.y);
 	if (player->side == 0)
-		player->pwd = (player->map.x - player->ray_pos.x + (1 - player->step.x) / 2) / player->ray_dir.x;
+		player->pwd = (player->map.x - player->pos.x + (1 - player->step.x) / 2) / player->ray_dir.x;
 	else
-		player->pwd = (player->map.y - player->ray_pos.y + (1 - player->step.y) / 2) / player->ray_dir.y;
+		player->pwd = (player->map.y - player->pos.y + (1 - player->step.y) / 2) / player->ray_dir.y;
 }
 
 void	draw_line(int x, t_player *player, t_data *data)
 {
-	write(1, "draw\n", 5);
 	int		line_h;
 	int		start;
 	int		end;
 
-	line_h = data->resy / (int)player->pwd;
+	line_h = (int)(data->resy / player->pwd);
 	start = -line_h / 2 + data->resy / 2;
 	end = line_h / 2 + data->resy / 2;
+	//printf("%i, %i\n", start, end);
 	if (start < 0)
 		start = 0;
 	if (end > data->resy)
 		end = data->resy - 1;
-	//verLine(x, start, end, data);
+	verLine(x, start, end, data, player);
+	printf("RAY IS OVER\n");
 }

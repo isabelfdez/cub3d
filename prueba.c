@@ -6,12 +6,13 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/30 17:54:57 by isfernan          #+#    #+#             */
-/*   Updated: 2020/06/30 20:03:40 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/01 19:37:11 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mlx.h"
 #include <math.h>
+#include <stdio.h>
 
 int		condition(int i, int j)
 {
@@ -20,14 +21,24 @@ int		condition(int i, int j)
 	return (0);
 }
 
+int		condition2()
+{
+	int	*a;
+	int	b;
+
+	a = &b;
+	b = 9;
+	return (*a);
+}
+
 int main()
 {
 	void *mlx_ptr;
 	void *win_ptr;
 	int i = 25;
 	int j;
-	int theta = 0;
-	int r = 80;
+	//int theta = 0;
+	//int r = 80;
 
 	mlx_ptr = mlx_init();
 	win_ptr = mlx_new_window(mlx_ptr, 500, 500, "prueba");
@@ -42,6 +53,8 @@ int main()
 		}
 		i++;
 	}
+	i = mlx_key_hook(win_ptr, &condition2, mlx_ptr);
+	printf("%i", i);
 	/*i = 80;
 	while (i < 120)
 	{

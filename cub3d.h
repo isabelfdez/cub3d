@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/06/30 20:06:59 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/01 18:22:09 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ typedef struct	s_data
 	int			c;		/* Number of columns in the map */
 	int			l;		/* Numer of lines in the map */
 	char		dir1;	/* Starting direction of the player */
+	void		*mlx_ptr;
+	void		*win_ptr;
 }				t_data;
 
 typedef	struct	s_dvector
@@ -57,14 +59,13 @@ typedef	struct	s_player
 	t_dvector	dir;		/* Direction that the player is pointing to */
 	t_dvector	cam_plane;	/* Amplitude of the player's view */
 	double		cameraX;	/* Position of the camera in the camera plane */
-	t_dvector	ray_pos;	/* Coordinates of the emerging point of the ray */
 	t_dvector	ray_dir;	/* Direction of the ray */
 	t_ivector	map;		/* Square of the map where the player is laying */
 	t_dvector	side_dist;
 	t_dvector	delta_dist;
 	t_ivector	step;
 	int			hit;		/* 1 is it has hit a wall, 0 otherwise */
-	int			side;		/* 0 if the wall hit by the reay is N or S and 1 otherwise */
+	int			side;		/* 0 if the wall hit by the ray is N or S and 1 otherwise */
 	double		pwd;
 }				t_player;
 
@@ -113,7 +114,7 @@ int		col_character(t_data *data);
 t_dvector	create_dvec(double i, double j);
 t_ivector	create_ivec(int i, int j);
 
-
-void	verLine(int x, int start, int end, t_data *data);
+void	openWindow(t_data *data);
+void	verLine(int x, int start, int end, t_data *data, t_player *player);
 
 #endif
