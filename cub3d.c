@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/07/01 19:12:52 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/02 20:18:12 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,7 @@ void	fill_map(t_data *data, int jcpy[], char *aux)
 		l++;
 	}
 	free(aux);
+	initialize_keys(data);
 	alter_map(data);
 	check_map_content(data);
 	map_graph(data);
@@ -349,9 +350,9 @@ int		check_col_char(t_data *data, int c)
 void	start_raycasting(t_data *data)
 {
 	t_player	*player;
-	int			x;
+	//int			x;
 
-	x = 0;
+	//x = 0;
 	openWindow(data);
 	if (!(player = malloc(sizeof(t_player))))
 		return ;
@@ -366,7 +367,8 @@ void	start_raycasting(t_data *data)
 	else if (data->dir1 == 'W')
 		player->dir = create_dvec(1, 0);
 	player->cam_plane = create_dvec(0.66 * fabs(player->dir.y), 0.66 * fabs(player->dir.x)); // No estoy muy segura de esto
-	while (x < data->resx)
+	draw_screen(data, player);
+	/*while (x < data->resx)
 	{
 		calculations_ray(player, x, data->resx);
 		initialDDA(player);
@@ -374,7 +376,11 @@ void	start_raycasting(t_data *data)
 		fishEye(player);
 		draw_line(x, player, data);
 		x++;
-	}
+	}*/
+	data->player = player;
+	mlx_hook(data->win_ptr, 2, 1L << 0, key_pressed, data);
+	mlx_hook(data->win_ptr, 3, 1L << 1, key_released, data);
+	mlx_loop_hook(data->mlx_ptr, loop_manager, data);
 	mlx_loop(data->mlx_ptr);
 }
 
@@ -432,7 +438,7 @@ void	DDA(t_player *player, t_data *data)
 {
 	while (player->hit == 0)
 	{
-		printf("mapx %i mapy %i stepx %i stepy %i\n", player->map.x, player->map.y, player->step.x, player->step.y);
+		//printf("mapx %i mapy %i stepx %i stepy %i\n", player->map.x, player->map.y, player->step.x, player->step.y);
 		if (player->side_dist.x <= player->side_dist.y)
 		{
 			player->side_dist.x += player->delta_dist.x;
@@ -449,13 +455,13 @@ void	DDA(t_player *player, t_data *data)
 		if (data->map[player->map.y][player->map.x] != '0')
 			player->hit = 1;
 	}
-	printf("hit en x = %i y = %i\n", player->map.x, player->map.y);
+	//printf("hit en x = %i y = %i\n", player->map.x, player->map.y);
 }
 
 void	fishEye(t_player *player)
 {
-	printf("mapx %i mapy %i stepx %i stepy %i raydirx %f raydiry %f side dist_x %f side dist_y %f\n", player->map.x, player->map.y, 
-		player->step.x, player->step.y, player->ray_dir.x, player->ray_dir.y, player->side_dist.x, player->side_dist.y);
+	//printf("mapx %i mapy %i stepx %i stepy %i raydirx %f raydiry %f side dist_x %f side dist_y %f\n", player->map.x, player->map.y, 
+	//	player->step.x, player->step.y, player->ray_dir.x, player->ray_dir.y, player->side_dist.x, player->side_dist.y);
 	if (player->side == 0)
 		player->pwd = (player->map.x - player->pos.x + (1 - player->step.x) / 2) / player->ray_dir.x;
 	else
@@ -477,5 +483,103 @@ void	draw_line(int x, t_player *player, t_data *data)
 	if (end > data->resy)
 		end = data->resy - 1;
 	verLine(x, start, end, data, player);
-	printf("RAY IS OVER\n");
+	//printf("RAY IS OVER\n");
+}
+
+/* En las teclas me falta añadir el ESC */
+
+int		key_pressed(int key, void *param)
+{
+	t_data	*data;
+
+	data = (t_data *)param;
+	if (key == RIGHT && data->key.right == 0)
+		data->key.right++;
+	else if (key == LEFT && data->key.left == 0)
+		data->key.left++;
+	else if (key == TOWARDS && data->key.towards == 0)
+		data->key.towards++;
+	else if (key == BACKWARDS && data->key.backwards == 0)
+		data->key.backwards++;
+	return (0);
+}
+
+int		key_released(int key, void *param)
+{
+	t_data	*data;
+
+	data = (t_data *)param;
+	if (key == RIGHT && data->key.right == 1)
+		data->key.right--;
+	else if (key == LEFT && data->key.left == 1)
+		data->key.left--;
+	else if (key == TOWARDS && data->key.towards == 1)
+		data->key.towards--;
+	else if (key == BACKWARDS && data->key.backwards == 1)
+		data->key.backwards--;
+	return (0);
+}
+
+int		loop_manager(void *param)
+{
+	t_data *data;
+
+	data = (t_data *)param;
+	key_manager(data);
+	return (0);
+}
+
+void	key_manager(t_data *data)
+{
+	if (data->key.right == 1)
+		move_right(data);
+	/*if (data->key.left == 1)
+		move_left(data);
+	if (data->key.towards == 1)
+		move_towards(data);
+	if (data->key.backwards == 1)
+		move_backwards(data);*/
+	draw_screen(data, data->player);
+}
+
+void	move_right(t_data *data)
+{
+	int	x;
+	int y;
+	double i;
+	double j;
+	t_player *player;
+
+	player = data->player;
+	i = player->pos.x;
+	j = player->pos.y;
+	x = player->pos.x + M_SPEED * player->dir.x;
+	y = player->pos.y;
+	ft_putstr_fd("posx ", 1);
+	ft_putnbr_fd((int)(player->pos.x * (double)1000), 1);
+	ft_putchar_fd('\n', 1);
+	ft_putstr_fd("x ", 1);
+	ft_putnbr_fd((int)(player->pos.x + M_SPEED * player->dir.x * 1000), 1);
+	ft_putchar_fd('\n', 1);
+	//ft_putstr_fd("move", 1);
+	if (x < data->l && y < data->c && data->map[x][y] == '0')
+		player->pos.x += M_SPEED * player->dir.x;
+	ft_putstr_fd("posx_2 ", 1);
+	ft_putnbr_fd((int)(player->pos.x * (double)1000), 1);
+	ft_putchar_fd('\n', 1);
+	ft_putstr_fd("posy ", 1);
+	ft_putnbr_fd((int)(player->pos.y * (double)1000), 1);
+	ft_putchar_fd('\n', 1);
+	ft_putstr_fd("y ", 1);
+	ft_putnbr_fd((int)(player->pos.y + M_SPEED * player->dir.y * 1000), 1);
+	ft_putchar_fd('\n', 1);
+	x = player->pos.x;
+	y = player->pos.y + M_SPEED * player->dir.y;
+	if (x < data->l && y < data->c && data->map[x][y] == '0')
+		player->pos.y += M_SPEED * player->dir.y;
+	ft_putstr_fd("posy_2 ", 1);
+	ft_putnbr_fd((int)(player->pos.y * (double)1000), 1);
+	ft_putchar_fd('\n', 1);
+	//ft_putnbr_fd((int)(i - player->pos.x) * 100, 1);
+	//ft_putnbr_fd((int)(j - player->pos.y) * 100, 1);
 }

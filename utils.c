@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 20:15:19 by aserrano          #+#    #+#             */
-/*   Updated: 2020/06/30 17:03:53 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/02 18:49:25 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,4 +248,12 @@ t_ivector	create_ivec(int i, int j)
 	vector.x = i;
 	vector.y = j;
 	return (vector);
+}
+
+void	initialize_keys(t_data *data)
+{
+	data->key.backwards = 0;
+	data->key.towards = 0;
+	data->key.right = 0;
+	data->key.left = 0;
 }

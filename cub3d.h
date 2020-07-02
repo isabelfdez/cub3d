@@ -6,12 +6,21 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/07/01 18:22:09 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/02 20:19:35 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
+
+# define RIGHT 2
+# define LEFT 0
+# define TOWARDS 13
+# define BACKWARDS 1
+# define CAM_RIGHT 124
+# define CAM_LEFT 123
+# define M_SPEED 1
+# define R_SPEED 4
 
 # include "mlx.h"
 # include "./get_next_line/get_next_line.h"
@@ -26,20 +35,13 @@ typedef struct	s_col
 	int			B;
 }				t_col;
 
-typedef struct	s_data
+typedef	struct	s_key
 {
-	int			resx;
-	int			resy;
-	t_col		floor;
-	t_col		ceil;
-	char		**map;
-	char		**map2;
-	int			c;		/* Number of columns in the map */
-	int			l;		/* Numer of lines in the map */
-	char		dir1;	/* Starting direction of the player */
-	void		*mlx_ptr;
-	void		*win_ptr;
-}				t_data;
+	int			right;
+	int			left;
+	int			towards;
+	int			backwards;
+}				t_key;
 
 typedef	struct	s_dvector
 {
@@ -69,7 +71,24 @@ typedef	struct	s_player
 	double		pwd;
 }				t_player;
 
+typedef struct	s_data
+{
+	int			resx;
+	int			resy;
+	t_col		floor;
+	t_col		ceil;
+	char		**map;
+	char		**map2;
+	int			c;		/* Number of columns in the map */
+	int			l;		/* Numer of lines in the map */
+	char		dir1;	/* Starting direction of the player */
+	void		*mlx_ptr;
+	void		*win_ptr;
+	t_key		key;
+	t_player	*player;
+}				t_data;
 
+char	*ft_gnlcub(char **argv);
 void	ft_readfile(char *aux);
 int		ft_resolution(char *aux, int i, t_data *data);
 int		ft_floorcol(char *aux, int i, t_data *data);
@@ -113,8 +132,16 @@ int		line_character(t_data *data);
 int		col_character(t_data *data);
 t_dvector	create_dvec(double i, double j);
 t_ivector	create_ivec(int i, int j);
+void	initialize_keys(t_data *data);
 
 void	openWindow(t_data *data);
+void	draw_screen(t_data *data, t_player *player);
 void	verLine(int x, int start, int end, t_data *data, t_player *player);
+
+int		loop_manager(void *param);
+void	key_manager(t_data *data);
+int		key_pressed(int key, void *param);
+int		key_released(int key, void *param);
+void	move_right(t_data *data);
 
 #endif
