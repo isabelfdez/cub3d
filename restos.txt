@@ -89,3 +89,58 @@
 	else
 		map_graph(data);
 }*/
+
+
+void	move_towards(t_data *data)
+{
+	int	x;
+	int y;
+	//double i;
+	//double j;
+	t_player *player;
+
+	player = data->player;
+	//i = player->pos.x;
+	//j = player->pos.y;
+	x = (int)(player->pos.x + M_SPEED * player->dir.x);
+	y = (int)player->pos.y;
+	/*ft_putstr_fd("posx ", 1);
+	ft_putnbr_fd((int)(player->pos.x * (double)1000), 1);
+	ft_putchar_fd('\n', 1);
+	ft_putstr_fd("x ", 1);
+	ft_putnbr_fd((int)((player->pos.x + M_SPEED * player->dir.x) * 1000), 1);
+	ft_putchar_fd('\n', 1);*/
+	//ft_putstr_fd("move", 1);
+	/*ft_putstr_fd("previous posx: ", 1);
+	ft_putnbr_fd((int)(data->player->pos.x * 1000), 1);
+	ft_putchar_fd('\n', 1);*/
+	if (x < data->l && y < data->c && data->map[x][y] == '0')
+		data->player->pos.x += M_SPEED * player->dir.x;
+	/*ft_putstr_fd("later posx: ", 1);
+	ft_putnbr_fd((int)(data->player->pos.x * 1000), 1);
+	ft_putchar_fd('\n', 1);*/
+	/*ft_putstr_fd("posx_2 ", 1);
+	ft_putnbr_fd((int)(player->pos.x * (double)1000), 1);
+	ft_putchar_fd('\n', 1);
+	ft_putstr_fd("posy ", 1);
+	ft_putnbr_fd((int)(player->pos.y * (double)1000), 1);
+	ft_putchar_fd('\n', 1);
+	ft_putstr_fd("y ", 1);
+	ft_putnbr_fd((int)((player->pos.y + M_SPEED * player->dir.y) * 1000), 1);
+	ft_putchar_fd('\n', 1);*/
+	x = player->pos.x;
+	y = player->pos.y + M_SPEED * player->dir.y;
+	/*ft_putstr_fd("previous posy: ", 1);
+	ft_putnbr_fd((int)(data->player->pos.y * 1000), 1);
+	ft_putchar_fd('\n', 1);*/
+	if (x < data->l && y < data->c && data->map[x][y] == '0')
+		data->player->pos.y += M_SPEED * player->dir.y;
+	/**ft_putstr_fd("later posy: ", 1);
+	ft_putnbr_fd((int)(data->player->pos.y * 1000), 1);
+	ft_putchar_fd('\n', 1);*/
+	/*ft_putstr_fd("posy_2 ", 1);
+	ft_putnbr_fd((int)(player->pos.y * (double)1000), 1);
+	ft_putchar_fd('\n', 1);*/
+	//ft_putnbr_fd((int)(i - player->pos.x) * 100, 1);
+	//ft_putnbr_fd((int)(j - player->pos.y) * 100, 1);
+}

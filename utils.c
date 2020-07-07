@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 20:15:19 by aserrano          #+#    #+#             */
-/*   Updated: 2020/07/02 18:49:25 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/07 20:03:59 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,4 +256,41 @@ void	initialize_keys(t_data *data)
 	data->key.towards = 0;
 	data->key.right = 0;
 	data->key.left = 0;
+	data->key.arrow_left = 0;
+	data->key.arrow_right = 0;
+	data->key.esc = 0;
+	data->old_time = 0;
+	data->time = 0;
+}
+
+/*void	print_map(t_data *data)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	while (i < data->l)
+	{
+		j = 0;
+		while (j < data->c)
+		{
+			printf("%c", data->map[i][j]);
+			j++;
+		}
+		i++;
+		printf("\n");
+	}
+}*/
+
+void	print_map(t_data *data)
+{
+	int		i;
+
+	i = 0;
+	while (i < data->l)
+	{
+		ft_putendl_fd(data->map[i], 1);
+		i++;
+	}
+	ft_putchar_fd('\n', 1);
 }

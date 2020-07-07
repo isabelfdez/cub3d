@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/07/02 20:19:35 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/07 20:13:35 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@
 # define BACKWARDS 1
 # define CAM_RIGHT 124
 # define CAM_LEFT 123
-# define M_SPEED 1
-# define R_SPEED 4
+# define ESC 53
+# define M_SPEED 0.075
+# define R_SPEED 0.1
 
 # include "mlx.h"
 # include "./get_next_line/get_next_line.h"
@@ -41,6 +42,9 @@ typedef	struct	s_key
 	int			left;
 	int			towards;
 	int			backwards;
+	int			arrow_right;
+	int			arrow_left;
+	int			esc;
 }				t_key;
 
 typedef	struct	s_dvector
@@ -86,6 +90,8 @@ typedef struct	s_data
 	void		*win_ptr;
 	t_key		key;
 	t_player	*player;
+	double		old_time;
+	double		time;
 }				t_data;
 
 char	*ft_gnlcub(char **argv);
@@ -133,15 +139,23 @@ int		col_character(t_data *data);
 t_dvector	create_dvec(double i, double j);
 t_ivector	create_ivec(int i, int j);
 void	initialize_keys(t_data *data);
+void	print_map(t_data *data);
 
 void	openWindow(t_data *data);
 void	draw_screen(t_data *data, t_player *player);
+void	draw_screen2(t_data *data, t_player *player);
 void	verLine(int x, int start, int end, t_data *data, t_player *player);
 
 int		loop_manager(void *param);
 void	key_manager(t_data *data);
 int		key_pressed(int key, void *param);
 int		key_released(int key, void *param);
+int		close_window(void *data);
+void	move_towards(t_data *data);
+void	move_backwards(t_data *data);
 void	move_right(t_data *data);
+void	move_left(t_data *data);
+void	rotate_right(t_data *data);
+void	rotate_left(t_data *data);
 
 #endif

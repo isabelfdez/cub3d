@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/07/02 20:18:12 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/07 20:25:17 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 /* Hay que ver que lines esté bien si añado saltos de línea al final */
 /* El ft_atof está comentado porque no reconoce el pow */
+
+// Hay que hacer que no llegue a pegarse del todo a la pared porque si no se buggea
+// (no se mueve porque está atrapado en una pared y detecta que está rodeado por paredes)
+
+// Quitar el timepo de la estructura si no lo voy a utilizar
 
 int	main(int argc, char **argv)
 {
@@ -183,6 +188,8 @@ void	fill_map(t_data *data, int jcpy[], char *aux)
 	}
 	free(aux);
 	initialize_keys(data);
+	print_map(data);
+	ft_putendl_fd(data->map[6], 1);
 	alter_map(data);
 	check_map_content(data);
 	map_graph(data);
@@ -363,10 +370,11 @@ void	start_raycasting(t_data *data)
 	else if (data->dir1 == 'S')
 		player->dir = create_dvec(0, 1);
 	else if (data->dir1 == 'E')
-		player->dir = create_dvec(-1, 0);
-	else if (data->dir1 == 'W')
 		player->dir = create_dvec(1, 0);
+	else if (data->dir1 == 'W')
+		player->dir = create_dvec(-1, 0);
 	player->cam_plane = create_dvec(0.66 * fabs(player->dir.y), 0.66 * fabs(player->dir.x)); // No estoy muy segura de esto
+	data->map[line_character(data)][col_character(data)] = '0';
 	draw_screen(data, player);
 	/*while (x < data->resx)
 	{
@@ -380,6 +388,7 @@ void	start_raycasting(t_data *data)
 	data->player = player;
 	mlx_hook(data->win_ptr, 2, 1L << 0, key_pressed, data);
 	mlx_hook(data->win_ptr, 3, 1L << 1, key_released, data);
+	mlx_hook(data->win_ptr, 8, 1L << 5, close_window, data);
 	mlx_loop_hook(data->mlx_ptr, loop_manager, data);
 	mlx_loop(data->mlx_ptr);
 }
@@ -493,14 +502,23 @@ int		key_pressed(int key, void *param)
 	t_data	*data;
 
 	data = (t_data *)param;
+	if (key == ESC)
+	{
+		data->key.esc++;
+		return (0);
+	}
 	if (key == RIGHT && data->key.right == 0)
 		data->key.right++;
-	else if (key == LEFT && data->key.left == 0)
+	if (key == LEFT && data->key.left == 0)
 		data->key.left++;
-	else if (key == TOWARDS && data->key.towards == 0)
+	if (key == TOWARDS && data->key.towards == 0)
 		data->key.towards++;
-	else if (key == BACKWARDS && data->key.backwards == 0)
+	if (key == BACKWARDS && data->key.backwards == 0)
 		data->key.backwards++;
+	if (key == CAM_RIGHT && data->key.arrow_right == 0)
+		data->key.arrow_right++;
+	if (key == CAM_LEFT && data->key.arrow_left == 0)
+		data->key.arrow_left++;
 	return (0);
 }
 
@@ -511,12 +529,16 @@ int		key_released(int key, void *param)
 	data = (t_data *)param;
 	if (key == RIGHT && data->key.right == 1)
 		data->key.right--;
-	else if (key == LEFT && data->key.left == 1)
+	if (key == LEFT && data->key.left == 1)
 		data->key.left--;
-	else if (key == TOWARDS && data->key.towards == 1)
+	if (key == TOWARDS && data->key.towards == 1)
 		data->key.towards--;
-	else if (key == BACKWARDS && data->key.backwards == 1)
+	if (key == BACKWARDS && data->key.backwards == 1)
 		data->key.backwards--;
+	if (key == CAM_RIGHT && data->key.arrow_right == 1)
+		data->key.arrow_right--;
+	if (key == CAM_LEFT && data->key.arrow_left == 1)
+		data->key.arrow_left--;
 	return (0);
 }
 
@@ -531,55 +553,183 @@ int		loop_manager(void *param)
 
 void	key_manager(t_data *data)
 {
-	if (data->key.right == 1)
-		move_right(data);
-	/*if (data->key.left == 1)
-		move_left(data);
+	if (data->key.esc == 1)
+		exit(EXIT_SUCCESS);
 	if (data->key.towards == 1)
 		move_towards(data);
 	if (data->key.backwards == 1)
-		move_backwards(data);*/
-	draw_screen(data, data->player);
+		move_backwards(data);
+	if (data->key.right == 1)
+		move_right(data);
+	if (data->key.left == 1)
+		move_left(data);
+	if (data->key.arrow_right == 1)
+		rotate_right(data);
+	if (data->key.arrow_left == 1)
+		rotate_left(data);
+	draw_screen2(data, data->player);
+}
+
+void	move_towards(t_data *data)
+{
+	int			x;
+	int			y;
+	t_player	*player;
+
+	player = data->player;
+	x = (int)(player->pos.x + M_SPEED * player->dir.x);
+	y = (int)player->pos.y;
+	if (x < data->c)
+	{
+		ft_putstr_fd("primera\n", 1);
+		if (y < data->l)
+		{
+			ft_putstr_fd("segunda\n", 1);
+			if (data->map[y][x] == '0')
+			{
+				ft_putstr_fd("tercera\n", 1);
+				data->player->pos.x += M_SPEED * player->dir.x;
+			}
+			else
+			{
+				printf("el caracter que impide avanzar es: (%i, %i), que es %c\n", y, x, data->map[y][x]);
+			}
+			
+		}
+	}
+	/*if (x < data->c && y < data->l && data->map[x][y] == '0')
+	{
+		ft_putstr_fd("previous ", 1);
+		ft_putnbr_fd((int)(player->pos.x * 1000), 1);
+		ft_putchar_fd('\n', 1);
+		data->player->pos.x += M_SPEED * player->dir.x;		
+		ft_putstr_fd("later ", 1);
+		ft_putnbr_fd((int)(player->pos.x * 1000), 1);
+		ft_putchar_fd('\n', 1);
+		ft_putchar_fd('\n', 1);
+	}*/
+	x = player->pos.x;
+	y = player->pos.y + M_SPEED * player->dir.y;
+	/*if (x < data->c)
+	{
+		ft_putstr_fd("primera\n", 1);
+		if (y < data->l)
+		{
+			ft_putstr_fd("segunda\n", 1);
+			if (data->map[y][x] == '0')
+			{
+				ft_putstr_fd("tercera\n", 1);
+				data->player->pos.y += M_SPEED * player->dir.y;
+			}
+			else
+			{
+				printf("el caracter que impide avanzar es: (%i, %i), que es %c\n", y, x, data->map[y][x]);
+			}
+		}
+	}*/
+	if (x < data->c && y < data->l && data->map[y][x] == '0')
+	{
+		//ft_putstr_fd("previous ", 1);
+		//ft_putnbr_fd((int)(player->pos.y * 1000), 1);
+		//ft_putchar_fd('\n', 1);
+		data->player->pos.y += M_SPEED * player->dir.y;
+		//ft_putstr_fd("later ", 1);
+		//ft_putnbr_fd((int)(player->pos.y * 1000), 1);
+		//ft_putchar_fd('\n', 1);
+		//ft_putchar_fd('\n', 1);
+	}
+}
+
+void	move_backwards(t_data *data)
+{
+	int			x;
+	int			y;
+	t_player	*player;
+
+	player = data->player;
+	x = (int)(player->pos.x - M_SPEED * player->dir.x);
+	y = (int)player->pos.y;
+	if (x < data->c && y < data->l && data->map[y][x] == '0')
+		data->player->pos.x -= M_SPEED * player->dir.x;
+	x = player->pos.x;
+	y = player->pos.y - M_SPEED * player->dir.y;
+	if (x < data->c && y < data->l && data->map[y][x] == '0')
+		data->player->pos.y -= M_SPEED * player->dir.y;
 }
 
 void	move_right(t_data *data)
 {
-	int	x;
-	int y;
-	double i;
-	double j;
-	t_player *player;
+	int			x;
+	int			y;
+	t_player	*player;
 
 	player = data->player;
-	i = player->pos.x;
-	j = player->pos.y;
-	x = player->pos.x + M_SPEED * player->dir.x;
-	y = player->pos.y;
-	ft_putstr_fd("posx ", 1);
-	ft_putnbr_fd((int)(player->pos.x * (double)1000), 1);
-	ft_putchar_fd('\n', 1);
-	ft_putstr_fd("x ", 1);
-	ft_putnbr_fd((int)(player->pos.x + M_SPEED * player->dir.x * 1000), 1);
-	ft_putchar_fd('\n', 1);
-	//ft_putstr_fd("move", 1);
-	if (x < data->l && y < data->c && data->map[x][y] == '0')
-		player->pos.x += M_SPEED * player->dir.x;
-	ft_putstr_fd("posx_2 ", 1);
-	ft_putnbr_fd((int)(player->pos.x * (double)1000), 1);
-	ft_putchar_fd('\n', 1);
-	ft_putstr_fd("posy ", 1);
-	ft_putnbr_fd((int)(player->pos.y * (double)1000), 1);
-	ft_putchar_fd('\n', 1);
-	ft_putstr_fd("y ", 1);
-	ft_putnbr_fd((int)(player->pos.y + M_SPEED * player->dir.y * 1000), 1);
-	ft_putchar_fd('\n', 1);
+	x = (int)(player->pos.x - M_SPEED * player->dir.y);
+	y = (int)player->pos.y;
+	if (x < data->c && y < data->l && data->map[y][x] == '0')
+		data->player->pos.x -= M_SPEED * player->dir.y;
 	x = player->pos.x;
-	y = player->pos.y + M_SPEED * player->dir.y;
-	if (x < data->l && y < data->c && data->map[x][y] == '0')
-		player->pos.y += M_SPEED * player->dir.y;
-	ft_putstr_fd("posy_2 ", 1);
-	ft_putnbr_fd((int)(player->pos.y * (double)1000), 1);
-	ft_putchar_fd('\n', 1);
-	//ft_putnbr_fd((int)(i - player->pos.x) * 100, 1);
-	//ft_putnbr_fd((int)(j - player->pos.y) * 100, 1);
+	y = player->pos.y - M_SPEED * player->dir.x;
+	if (x < data->c && y < data->l && data->map[y][x] == '0')
+		data->player->pos.y += M_SPEED * player->dir.x;
+}
+
+void	move_left(t_data *data)
+{
+	int			x;
+	int			y;
+	t_player	*player;
+
+	player = data->player;
+	x = (int)(player->pos.x + M_SPEED * player->dir.y);
+	y = (int)player->pos.y;
+	if (x < data->c && y < data->l && data->map[y][x] == '0')
+		data->player->pos.x += M_SPEED * player->dir.y;
+	x = player->pos.x;
+	y = player->pos.y + M_SPEED * player->dir.x;
+	if (x < data->c && y < data->l && data->map[y][x] == '0')
+		data->player->pos.y -= M_SPEED * player->dir.x;
+}
+
+void	rotate_left(t_data *data)
+{
+	double		dirx;
+	double		diry;
+	double		planex;
+	double		planey;
+
+	dirx = data->player->dir.x;
+	diry = data->player->dir.y;
+	planex = data->player->cam_plane.x,
+	planey = data->player->cam_plane.y;
+	data->player->dir.x = cos(-R_SPEED) * dirx - sin(-R_SPEED) * diry;
+	data->player->dir.y = sin(-R_SPEED) * dirx + cos(-R_SPEED) * diry;
+	data->player->cam_plane.x = cos(-R_SPEED) * planex - sin(-R_SPEED) * planey;
+	data->player->cam_plane.y = sin(-R_SPEED) * planex + cos(-R_SPEED) * planey;
+}
+
+void	rotate_right(t_data *data)
+{
+	double		dirx;
+	double		diry;
+	double		planex;
+	double		planey;
+
+	dirx = data->player->dir.x;
+	diry = data->player->dir.y;
+	planex = data->player->cam_plane.x,
+	planey = data->player->cam_plane.y;
+	data->player->dir.x = cos(R_SPEED) * dirx - sin(R_SPEED) * diry;
+	data->player->dir.y = sin(R_SPEED) * dirx + cos(R_SPEED) * diry;
+	data->player->cam_plane.x = cos(R_SPEED) * planex - sin(R_SPEED) * planey;
+	data->player->cam_plane.y = sin(R_SPEED) * planex + cos(R_SPEED) * planey;
+}
+
+// Esto está fatal
+
+int		close_window(void *data)
+{
+	(void) *data;
+	exit(EXIT_SUCCESS);
+	return (0);
 }
