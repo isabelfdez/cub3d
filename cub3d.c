@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/07/07 20:25:17 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/08 16:59:29 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,12 @@ int	main(int argc, char **argv)
 	char	*str;
 	char	*aux;
 	char	*aux2;
-	(void)	argc;
 
+	if (argc < 2)
+	{
+		ft_putstr_fd("Error\nInvalid arguments", 2);
+		exit(EXIT_FAILURE);
+	}
 	file = argv[1];
 	fd = open(file, O_RDONLY);
 	while (get_next_line(fd, &str))
@@ -44,7 +48,6 @@ int	main(int argc, char **argv)
 			free(aux2);
 		}
 	}
-	//printf("%s", aux);
 	ft_readfile(aux);
 }
 
@@ -376,19 +379,10 @@ void	start_raycasting(t_data *data)
 	player->cam_plane = create_dvec(0.66 * fabs(player->dir.y), 0.66 * fabs(player->dir.x)); // No estoy muy segura de esto
 	data->map[line_character(data)][col_character(data)] = '0';
 	draw_screen(data, player);
-	/*while (x < data->resx)
-	{
-		calculations_ray(player, x, data->resx);
-		initialDDA(player);
-		DDA(player, data);
-		fishEye(player);
-		draw_line(x, player, data);
-		x++;
-	}*/
 	data->player = player;
 	mlx_hook(data->win_ptr, 2, 1L << 0, key_pressed, data);
 	mlx_hook(data->win_ptr, 3, 1L << 1, key_released, data);
-	mlx_hook(data->win_ptr, 8, 1L << 5, close_window, data);
+	mlx_hook(data->win_ptr, 17, 1L << 17, close_window, data);
 	mlx_loop_hook(data->mlx_ptr, loop_manager, data);
 	mlx_loop(data->mlx_ptr);
 }
@@ -495,8 +489,6 @@ void	draw_line(int x, t_player *player, t_data *data)
 	//printf("RAY IS OVER\n");
 }
 
-/* En las teclas me falta añadir el ESC */
-
 int		key_pressed(int key, void *param)
 {
 	t_data	*data;
@@ -567,7 +559,8 @@ void	key_manager(t_data *data)
 		rotate_right(data);
 	if (data->key.arrow_left == 1)
 		rotate_left(data);
-	draw_screen2(data, data->player);
+	if (find_key_pressed(data))
+		draw_screen2(data, data->player);
 }
 
 void	move_towards(t_data *data)
@@ -597,47 +590,10 @@ void	move_towards(t_data *data)
 			
 		}
 	}
-	/*if (x < data->c && y < data->l && data->map[x][y] == '0')
-	{
-		ft_putstr_fd("previous ", 1);
-		ft_putnbr_fd((int)(player->pos.x * 1000), 1);
-		ft_putchar_fd('\n', 1);
-		data->player->pos.x += M_SPEED * player->dir.x;		
-		ft_putstr_fd("later ", 1);
-		ft_putnbr_fd((int)(player->pos.x * 1000), 1);
-		ft_putchar_fd('\n', 1);
-		ft_putchar_fd('\n', 1);
-	}*/
 	x = player->pos.x;
 	y = player->pos.y + M_SPEED * player->dir.y;
-	/*if (x < data->c)
-	{
-		ft_putstr_fd("primera\n", 1);
-		if (y < data->l)
-		{
-			ft_putstr_fd("segunda\n", 1);
-			if (data->map[y][x] == '0')
-			{
-				ft_putstr_fd("tercera\n", 1);
-				data->player->pos.y += M_SPEED * player->dir.y;
-			}
-			else
-			{
-				printf("el caracter que impide avanzar es: (%i, %i), que es %c\n", y, x, data->map[y][x]);
-			}
-		}
-	}*/
 	if (x < data->c && y < data->l && data->map[y][x] == '0')
-	{
-		//ft_putstr_fd("previous ", 1);
-		//ft_putnbr_fd((int)(player->pos.y * 1000), 1);
-		//ft_putchar_fd('\n', 1);
 		data->player->pos.y += M_SPEED * player->dir.y;
-		//ft_putstr_fd("later ", 1);
-		//ft_putnbr_fd((int)(player->pos.y * 1000), 1);
-		//ft_putchar_fd('\n', 1);
-		//ft_putchar_fd('\n', 1);
-	}
 }
 
 void	move_backwards(t_data *data)
@@ -724,8 +680,6 @@ void	rotate_right(t_data *data)
 	data->player->cam_plane.x = cos(R_SPEED) * planex - sin(R_SPEED) * planey;
 	data->player->cam_plane.y = sin(R_SPEED) * planex + cos(R_SPEED) * planey;
 }
-
-// Esto está fatal
 
 int		close_window(void *data)
 {

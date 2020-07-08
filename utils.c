@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 20:15:19 by aserrano          #+#    #+#             */
-/*   Updated: 2020/07/07 20:03:59 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/08 15:43:33 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,4 +293,24 @@ void	print_map(t_data *data)
 		i++;
 	}
 	ft_putchar_fd('\n', 1);
+}
+
+int		find_key_pressed(t_data *data)
+{
+	int n;
+
+	n = 0;
+	if (data->key.towards == 1)
+		n++;
+	if (data->key.backwards == 1)
+		n++;
+	if (data->key.right == 1)
+		n++;
+	if (data->key.left == 1)
+		n++;
+	if (data->key.arrow_left == 1)
+		n++;
+	if (data->key.arrow_right == 1)
+		n++;
+	return (n);
 }

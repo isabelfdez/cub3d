@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/07/07 20:13:35 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/08 16:42:25 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ t_dvector	create_dvec(double i, double j);
 t_ivector	create_ivec(int i, int j);
 void	initialize_keys(t_data *data);
 void	print_map(t_data *data);
+int		find_key_pressed(t_data *data);
 
 void	openWindow(t_data *data);
 void	draw_screen(t_data *data, t_player *player);
