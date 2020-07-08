@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/07/08 16:59:29 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/08 17:10:50 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -379,6 +379,15 @@ void	start_raycasting(t_data *data)
 	player->cam_plane = create_dvec(0.66 * fabs(player->dir.y), 0.66 * fabs(player->dir.x)); // No estoy muy segura de esto
 	data->map[line_character(data)][col_character(data)] = '0';
 	draw_screen(data, player);
+	/*while (x < data->resx)
+	{
+		calculations_ray(player, x, data->resx);
+		initialDDA(player);
+		DDA(player, data);
+		fishEye(player);
+		draw_line(x, player, data);
+		x++;
+	}*/
 	data->player = player;
 	mlx_hook(data->win_ptr, 2, 1L << 0, key_pressed, data);
 	mlx_hook(data->win_ptr, 3, 1L << 1, key_released, data);
@@ -590,10 +599,47 @@ void	move_towards(t_data *data)
 			
 		}
 	}
+	/*if (x < data->c && y < data->l && data->map[x][y] == '0')
+	{
+		ft_putstr_fd("previous ", 1);
+		ft_putnbr_fd((int)(player->pos.x * 1000), 1);
+		ft_putchar_fd('\n', 1);
+		data->player->pos.x += M_SPEED * player->dir.x;		
+		ft_putstr_fd("later ", 1);
+		ft_putnbr_fd((int)(player->pos.x * 1000), 1);
+		ft_putchar_fd('\n', 1);
+		ft_putchar_fd('\n', 1);
+	}*/
 	x = player->pos.x;
 	y = player->pos.y + M_SPEED * player->dir.y;
+	/*if (x < data->c)
+	{
+		ft_putstr_fd("primera\n", 1);
+		if (y < data->l)
+		{
+			ft_putstr_fd("segunda\n", 1);
+			if (data->map[y][x] == '0')
+			{
+				ft_putstr_fd("tercera\n", 1);
+				data->player->pos.y += M_SPEED * player->dir.y;
+			}
+			else
+			{
+				printf("el caracter que impide avanzar es: (%i, %i), que es %c\n", y, x, data->map[y][x]);
+			}
+		}
+	}*/
 	if (x < data->c && y < data->l && data->map[y][x] == '0')
+	{
+		//ft_putstr_fd("previous ", 1);
+		//ft_putnbr_fd((int)(player->pos.y * 1000), 1);
+		//ft_putchar_fd('\n', 1);
 		data->player->pos.y += M_SPEED * player->dir.y;
+		//ft_putstr_fd("later ", 1);
+		//ft_putnbr_fd((int)(player->pos.y * 1000), 1);
+		//ft_putchar_fd('\n', 1);
+		//ft_putchar_fd('\n', 1);
+	}
 }
 
 void	move_backwards(t_data *data)

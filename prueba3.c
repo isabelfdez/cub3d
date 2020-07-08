@@ -1,22 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   prueba3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/12/21 12:52:45 by isfernan          #+#    #+#             */
-/*   Updated: 2020/07/08 17:28:20 by isfernan         ###   ########.fr       */
+/*   Created: 2020/07/08 17:57:51 by isfernan          #+#    #+#             */
+/*   Updated: 2020/07/08 19:09:39 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "mlx.h"
 
-#include "/Users/isfernan/42cursus/cub3d/cub3d_fake/libft/libft.h"
-//# include "/Users/isfernan/42cursus/miniRT/miniRT_fake/libft/libft.h"
+int main()
+{
+	void    *mlx_ptr;
+	void    *win;
+	void    *img;
+	char    *path = "./mario.png";
+	//int     h = 50;
+	//int		w = 50;
 
-void	ft_gnl(char *buff[], char **line, int *nb, int fd);
-int		ft_read(int fd, char str[], char *buff[]);
-int		get_next_line(int fd, char **line);
-#endif
+	mlx_ptr = mlx_init();
+	
+	win = mlx_new_window(mlx_ptr, 400, 300, "test");
+	img = mlx_new_image(mlx_ptr, 400, 300);
+	mlx_put_image_to_window(mlx_ptr, win, path, 0, 0);
+	mlx_loop(mlx_ptr);
+	//mlx_put_image_to_window(mlx_ptr, win, img, 70, 70);
+
+}
