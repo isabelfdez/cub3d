@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/07/08 16:42:25 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/16 18:55:59 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,15 @@ typedef struct	s_col
 	int			G;
 	int			B;
 }				t_col;
+
+typedef struct  s_image 
+{
+    void        *img;
+    char        *addr;
+    int         bits_per_pixel;
+    int         line_length;
+    int         endian;
+}               t_image;
 
 typedef	struct	s_key
 {
@@ -90,8 +99,7 @@ typedef struct	s_data
 	void		*win_ptr;
 	t_key		key;
 	t_player	*player;
-	double		old_time;
-	double		time;
+	t_image		image;
 }				t_data;
 
 char	*ft_gnlcub(char **argv);
@@ -118,7 +126,7 @@ void	calculations_ray(t_player *player, int x, int resx);
 void	initialDDA(t_player *player);
 void	DDA(t_player *player, t_data *data);
 void	fishEye(t_player *player);
-void	draw_line(int x, t_player *player, t_data *data);
+int		*draw_line(t_player *player, t_data *data);
 
 int		skip_spaces(char *str, int i);
 int		skip_spa_com(char *str, int i);
@@ -144,8 +152,7 @@ int		find_key_pressed(t_data *data);
 
 void	openWindow(t_data *data);
 void	draw_screen(t_data *data, t_player *player);
-void	draw_screen2(t_data *data, t_player *player);
-void	verLine(int x, int start, int end, t_data *data, t_player *player);
+void	verLine(int x, t_data *data, t_player *player);
 
 int		loop_manager(void *param);
 void	key_manager(t_data *data);

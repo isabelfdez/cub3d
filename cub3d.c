@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/07/08 17:10:50 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/16 19:37:10 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -480,7 +480,7 @@ void	fishEye(t_player *player)
 		player->pwd = (player->map.y - player->pos.y + (1 - player->step.y) / 2) / player->ray_dir.y;
 }
 
-void	draw_line(int x, t_player *player, t_data *data)
+/*void	draw_line(int x, t_player *player, t_data *data)
 {
 	int		line_h;
 	int		start;
@@ -496,7 +496,27 @@ void	draw_line(int x, t_player *player, t_data *data)
 		end = data->resy - 1;
 	verLine(x, start, end, data, player);
 	//printf("RAY IS OVER\n");
+}*/
+
+int		*draw_line(t_player *player, t_data *data)
+{
+	int		line_h;
+	int		*array;
+
+	array = malloc(sizeof(int) * 2);
+	line_h = (int)(data->resy / player->pwd);
+	array[0] = -line_h / 2 + data->resy / 2;
+	array[1] = line_h / 2 + data->resy / 2;
+	//printf("%i, %i\n", start, end);
+	if (array[0] < 0)
+		array[0] = 0;
+	if (array[1] > data->resy)
+		array[1] = data->resy - 1;
+	return (array);
+	//verLine(x, start, end, data, player);
+	//printf("RAY IS OVER\n");
 }
+
 
 int		key_pressed(int key, void *param)
 {
@@ -569,7 +589,7 @@ void	key_manager(t_data *data)
 	if (data->key.arrow_left == 1)
 		rotate_left(data);
 	if (find_key_pressed(data))
-		draw_screen2(data, data->player);
+		draw_screen(data, data->player);
 }
 
 void	move_towards(t_data *data)
