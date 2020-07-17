@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/30 17:52:28 by isfernan          #+#    #+#             */
-/*   Updated: 2020/07/16 19:42:46 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/17 17:58:01 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 
 void	openWindow(t_data *data)
 {
-    void	*mlx_ptr;
-	void	*win_ptr;
-
-    mlx_ptr = mlx_init();
-	win_ptr = mlx_new_window(mlx_ptr, data->resx, data->resy, "Raycaster");
-	data->mlx_ptr = mlx_ptr;
-	data->win_ptr = win_ptr;
+    data->mlx_ptr = mlx_init();
+	data->win_ptr = mlx_new_window(data->mlx_ptr, data->resx, data->resy, "Raycaster");
+	data->image.img = mlx_new_image(data->mlx_ptr, data->resx, data->resy);
+	data->image.addr = mlx_get_data_addr(data->image.img, 
+										&data->image.bits_per_pixel, 
+										&data->image.line_length,
+                                 		&data->image.endian);
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->image.img, 0, 0);
 }
 
 void	draw_screen(t_data *data, t_player *player)
@@ -102,39 +103,41 @@ void	verLine(int x, t_data *data, t_player *player)
 	}
 	data->image = &img;*/
 
-    t_image  img;
+    //t_image  img;
 	int		i;
 	int		start;
 	int		end;
+	int		*arr;
 
-    img.img = mlx_new_image(data->mlx_ptr, data->resx, data->resy);
-    img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
-                                 &img.endian);
-	while (x < data->resy)
+    //img.img = mlx_new_image(data->mlx_ptr, data->resx, data->resy);
+    //img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
+    //                             &img.endian);
+
+	while (x < data->resx)
 	{
-		start = draw_line(player, data)[0];
-		end = draw_line(player, data)[1];
+		arr = draw_line(player, data);
+		start = arr[0];
+		end = arr[1];
 		i = 0;
 		while (i < start)
 		{
-			my_mlx_pixel_put(&img, x, i, 0x00000000);
+			my_mlx_pixel_put(&data->image, x, i, 0x000000);
 			i++;
 		}
 		while (i < end)
 		{
 			if (player->side == 1)
-				my_mlx_pixel_put(&img, x, i, 0x00FFFF00);
+				my_mlx_pixel_put(&data->image, x, i, 0xFFFF00);
 			else
-				my_mlx_pixel_put(&img, x, i, 0x00FFE000);
+				my_mlx_pixel_put(&data->image, x, i, 0xFFE000);
 			i++;
 		}
-		while (i < 300)
+		while (i < data->resy)
 		{
-			my_mlx_pixel_put(&img, x, i, 0x00000000);
+			my_mlx_pixel_put(&data->image, x, i, 0x000000);
 			i++;	
 		}
 		x++;
 	}
-	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, img.img, 0, 0);
-	//data->image = img;
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->image.img, 0, 0);
 }

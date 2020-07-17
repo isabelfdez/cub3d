@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/07/16 19:37:10 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/17 17:58:03 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 /* Hay que ver que lines esté bien si añado saltos de línea al final */
 /* El ft_atof está comentado porque no reconoce el pow */
 
+// Si me pasan un mapa que no existe, da segmentation fault!
+
 // Hay que hacer que no llegue a pegarse del todo a la pared porque si no se buggea
 // (no se mueve porque está atrapado en una pared y detecta que está rodeado por paredes)
-
-// Quitar el timepo de la estructura si no lo voy a utilizar
 
 int	main(int argc, char **argv)
 {
@@ -360,9 +360,9 @@ int		check_col_char(t_data *data, int c)
 void	start_raycasting(t_data *data)
 {
 	t_player	*player;
-	//int			x;
+	int			x;
 
-	//x = 0;
+	x = 0;
 	openWindow(data);
 	if (!(player = malloc(sizeof(t_player))))
 		return ;
@@ -385,7 +385,7 @@ void	start_raycasting(t_data *data)
 		initialDDA(player);
 		DDA(player, data);
 		fishEye(player);
-		draw_line(x, player, data);
+		draw_line(player, data);
 		x++;
 	}*/
 	data->player = player;
@@ -507,7 +507,6 @@ int		*draw_line(t_player *player, t_data *data)
 	line_h = (int)(data->resy / player->pwd);
 	array[0] = -line_h / 2 + data->resy / 2;
 	array[1] = line_h / 2 + data->resy / 2;
-	//printf("%i, %i\n", start, end);
 	if (array[0] < 0)
 		array[0] = 0;
 	if (array[1] > data->resy)

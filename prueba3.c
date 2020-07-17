@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/08 17:57:51 by isfernan          #+#    #+#             */
-/*   Updated: 2020/07/16 18:44:55 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/17 16:14:18 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	other_function(t_window *test)
     img.img = mlx_new_image(test->ptr, 1920, 1080);
     img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
                                  &img.endian);
-	while (x < 1080)
+	while (x < 400)
 	{
 		i = 0;
 		while (i < start)
@@ -77,7 +77,7 @@ void	other_function(t_window *test)
 	test->image = img;
 }
 
-int             main(void)
+int		main(void)
 {
     t_window	*test;
 
@@ -86,5 +86,5 @@ int             main(void)
 	test->win = mlx_new_window(test->ptr, 1920, 1080, "Hello world!");
 	other_function(test);
 	mlx_put_image_to_window(test->ptr, test->win, test->image.img, 0, 0);
-    mlx_loop(test->ptr);
+	mlx_loop(test->ptr);
 }
