@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/07/20 16:58:20 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/20 20:20:39 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # define CAM_LEFT 123
 # define ESC 53
 # define M_SPEED 0.05
-# define R_SPEED 0.075
+# define R_SPEED 0.05
 
 # include "mlx.h"
 # include "./get_next_line/get_next_line.h"
@@ -149,6 +149,7 @@ t_ivector	create_ivec(int i, int j);
 void	initialize_keys(t_data *data);
 void	print_map(t_data *data);
 int		find_key_pressed(t_data *data);
+int		nb_sign(int a);
 
 void	openWindow(t_data *data);
 void	draw_screen(t_data *data, t_player *player);

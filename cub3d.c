@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/07/20 17:07:05 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/20 20:26:03 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 // Hay que hacer que no llegue a pegarse del todo a la pared porque si no se buggea
 // (no se mueve porque está atrapado en una pared y detecta que está rodeado por paredes)
+// Esto lo he intentado arreglar poniendo lo de 0.2 * nb_sign(player->dir.x) pero está mal
 
 int	main(int argc, char **argv)
 {
@@ -598,14 +599,10 @@ void	move_towards(t_data *data)
 	t_player	*player;
 
 	player = data->player;
-	x = (int)(player->pos.x + M_SPEED * player->dir.x);
-	y = (int)player->pos.y;
-	if (x < data->c)
-	{
-		if (y < data->l)
-			if (data->map[y][x] == '0')
-				data->player->pos.x += M_SPEED * player->dir.x;
-	}
+	x = player->pos.x + M_SPEED * player->dir.x + 0.2 * nb_sign(player->dir.x);
+	y = player->pos.y;
+	if (x < data->c && y < data->l && data->map[y][x] == '0')
+		data->player->pos.x += M_SPEED * player->dir.x;
 	/*if (x < data->c && y < data->l && data->map[x][y] == '0')
 	{
 		ft_putstr_fd("previous ", 1);
@@ -618,7 +615,7 @@ void	move_towards(t_data *data)
 		ft_putchar_fd('\n', 1);
 	}*/
 	x = player->pos.x;
-	y = player->pos.y + M_SPEED * player->dir.y;
+	y = player->pos.y + M_SPEED * player->dir.y - 0.2;
 	/*if (x < data->c)
 	{
 		ft_putstr_fd("primera\n", 1);
@@ -656,12 +653,12 @@ void	move_backwards(t_data *data)
 	t_player	*player;
 
 	player = data->player;
-	x = (int)(player->pos.x - M_SPEED * player->dir.x);
-	y = (int)player->pos.y;
+	x = player->pos.x - M_SPEED * player->dir.x + 0.2 * player->dir.x;
+	y = player->pos.y;
 	if (x < data->c && y < data->l && data->map[y][x] == '0')
 		data->player->pos.x -= M_SPEED * player->dir.x;
 	x = player->pos.x;
-	y = player->pos.y - M_SPEED * player->dir.y;
+	y = player->pos.y - M_SPEED * player->dir.y + 0.2;
 	if (x < data->c && y < data->l && data->map[y][x] == '0')
 		data->player->pos.y -= M_SPEED * player->dir.y;
 }
@@ -673,8 +670,8 @@ void	move_right(t_data *data)
 	t_player	*player;
 
 	player = data->player;
-	x = (int)(player->pos.x - M_SPEED * player->dir.y);
-	y = (int)player->pos.y;
+	x = player->pos.x - M_SPEED * player->dir.y + 0.2;
+	y = player->pos.y;
 	if (x < data->c && y < data->l && data->map[y][x] == '0')
 		data->player->pos.x -= M_SPEED * player->dir.y;
 	x = player->pos.x;
@@ -690,8 +687,8 @@ void	move_left(t_data *data)
 	t_player	*player;
 
 	player = data->player;
-	x = (int)(player->pos.x + M_SPEED * player->dir.y);
-	y = (int)player->pos.y;
+	x = player->pos.x + M_SPEED * player->dir.y - 0.2;
+	y = player->pos.y;
 	if (x < data->c && y < data->l && data->map[y][x] == '0')
 		data->player->pos.x += M_SPEED * player->dir.y;
 	x = player->pos.x;

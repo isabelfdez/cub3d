@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 20:15:19 by aserrano          #+#    #+#             */
-/*   Updated: 2020/07/16 17:03:05 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/20 20:20:24 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,4 +311,12 @@ int		find_key_pressed(t_data *data)
 	if (data->key.arrow_right == 1)
 		n++;
 	return (n);
+}
+
+int		nb_sign(int a)
+{
+	if (a < 0)
+		return (-1);
+	else
+		return (0);
 }
