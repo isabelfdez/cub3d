@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/30 17:52:28 by isfernan          #+#    #+#             */
-/*   Updated: 2020/07/17 17:58:01 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/20 16:26:31 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	openWindow(t_data *data)
 										&data->image.bits_per_pixel, 
 										&data->image.line_length,
                                  		&data->image.endian);
-	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->image.img, 0, 0);
+	//mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->image.img, 0, 0);
 }
 
 void	draw_screen(t_data *data, t_player *player)
@@ -37,8 +37,8 @@ void	draw_screen(t_data *data, t_player *player)
 		fishEye(player);
 		verLine(x, data, player);
 		x++;
+		mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->image.img, 0, 0);
 	}
-	//mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->image.img, 0, 0);
 }
 
 /*void	verLine(int x, int start, int end, t_data *data, t_player *player)
@@ -139,5 +139,5 @@ void	verLine(int x, t_data *data, t_player *player)
 		}
 		x++;
 	}
-	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->image.img, 0, 0);
+	//mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->image.img, 0, 0);
 }
