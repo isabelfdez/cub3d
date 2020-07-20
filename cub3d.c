@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/07/17 17:58:03 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/20 17:07:05 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -602,21 +602,9 @@ void	move_towards(t_data *data)
 	y = (int)player->pos.y;
 	if (x < data->c)
 	{
-		ft_putstr_fd("primera\n", 1);
 		if (y < data->l)
-		{
-			ft_putstr_fd("segunda\n", 1);
 			if (data->map[y][x] == '0')
-			{
-				ft_putstr_fd("tercera\n", 1);
 				data->player->pos.x += M_SPEED * player->dir.x;
-			}
-			else
-			{
-				printf("el caracter que impide avanzar es: (%i, %i), que es %c\n", y, x, data->map[y][x]);
-			}
-			
-		}
 	}
 	/*if (x < data->c && y < data->l && data->map[x][y] == '0')
 	{

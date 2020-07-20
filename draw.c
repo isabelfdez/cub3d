@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/30 17:52:28 by isfernan          #+#    #+#             */
-/*   Updated: 2020/07/20 16:26:31 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/20 16:46:09 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ void	draw_screen(t_data *data, t_player *player)
 		fishEye(player);
 		verLine(x, data, player);
 		x++;
-		mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->image.img, 0, 0);
 	}
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->image.img, 0, 0);
 }
 
 /*void	verLine(int x, int start, int end, t_data *data, t_player *player)
@@ -113,8 +113,8 @@ void	verLine(int x, t_data *data, t_player *player)
     //img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
     //                             &img.endian);
 
-	while (x < data->resx)
-	{
+	//while (x < data->resx)
+	//{
 		arr = draw_line(player, data);
 		start = arr[0];
 		end = arr[1];
@@ -137,7 +137,7 @@ void	verLine(int x, t_data *data, t_player *player)
 			my_mlx_pixel_put(&data->image, x, i, 0x000000);
 			i++;	
 		}
-		x++;
-	}
+		//x++;
+	//}
 	//mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->image.img, 0, 0);
 }

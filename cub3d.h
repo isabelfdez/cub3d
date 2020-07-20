@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/07/16 18:55:59 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/20 16:58:20 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 # define CAM_RIGHT 124
 # define CAM_LEFT 123
 # define ESC 53
-# define M_SPEED 0.075
-# define R_SPEED 0.1
+# define M_SPEED 0.05
+# define R_SPEED 0.075
 
 # include "mlx.h"
 # include "./get_next_line/get_next_line.h"
