@@ -6,12 +6,15 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/07/20 20:20:39 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/21 20:15:41 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
+
+# define TEX_W 64
+# define TEX_H 64
 
 # define RIGHT 2
 # define LEFT 0
@@ -21,6 +24,7 @@
 # define CAM_LEFT 123
 # define ESC 53
 # define M_SPEED 0.05
+# define M_SPEED2 0.05
 # define R_SPEED 0.05
 
 # include "mlx.h"
@@ -44,6 +48,14 @@ typedef struct  s_image
     int         line_length;
     int         endian;
 }               t_image;
+
+typedef	struct	s_texture
+{
+	char		*N;
+	char		*S;
+	char		*E;
+	char		*W;
+}				t_texture;
 
 typedef	struct	s_key
 {
@@ -90,6 +102,8 @@ typedef struct	s_data
 	int			resy;
 	t_col		floor;
 	t_col		ceil;
+	char		*floor_col;
+	char		*ceil_col;
 	char		**map;
 	char		**map2;
 	int			c;		/* Number of columns in the map */
@@ -100,6 +114,7 @@ typedef struct	s_data
 	t_key		key;
 	t_player	*player;
 	t_image		image;
+	t_texture	texture;
 }				t_data;
 
 char	*ft_gnlcub(char **argv);
@@ -107,6 +122,10 @@ void	ft_readfile(char *aux);
 int		ft_resolution(char *aux, int i, t_data *data);
 int		ft_floorcol(char *aux, int i, t_data *data);
 int		ft_ceilcol(char *aux, int i, t_data *data);
+int		ft_northtex(char *aux, int i, t_data *data);
+int		ft_southtex(char *aux, int i, t_data *data);
+int		ft_easttex(char *aux, int i, t_data *data);
+int		ft_westtex(char *aux, int i, t_data *data);
 
 void	allocate_map(t_data *data, int j, char *aux);
 void	fill_map(t_data *data, int jcpy[], char *aux);
@@ -150,6 +169,8 @@ void	initialize_keys(t_data *data);
 void	print_map(t_data *data);
 int		find_key_pressed(t_data *data);
 int		nb_sign(int a);
+char	*ft_getpath(char *aux, int i, int icpy);
+char	*to_base(unsigned int nb);
 
 void	openWindow(t_data *data);
 void	draw_screen(t_data *data, t_player *player);

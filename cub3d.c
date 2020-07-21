@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/07/20 20:26:03 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/21 20:19:09 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,35 +59,29 @@ void	ft_readfile(char *aux)
 	int		i;
 
 	j = 0;
-	i = 3;
+	i = 7;
 	if (!(data = malloc(sizeof(t_data))))
 		return ; /* Aquí hay que ver qué hacemos */
 	while (i > 0) /* Si uno de los parámetros no está, no sale de aquí */
 	{
 		if (aux[j] == 'R')
-		{
 			j = ft_resolution(aux, j + 1, data);
-			i--;
-		}
 		if (aux[j] == 'F')
-		{
 			j = ft_floorcol(aux, j + 1, data);
-			i--;
-		}
 		if (aux[j] == 'C')
-		{
 			j = ft_ceilcol(aux, j + 1, data);
-			i--;
-		}
+		if (aux[j] == 'N' && aux[j + 1] == 'O')
+			j = ft_northtex(aux, j + 2, data);
+		if (aux[j] == 'S' && aux[j + 1] == 'O')
+			j = ft_southtex(aux, j + 2, data);
+		if (aux[j] == 'E' && aux[j + 1] == 'A')
+			j = ft_easttex(aux, j + 2, data);
+		if (aux[j] == 'W' && aux[j + 1] == 'E')
+			j = ft_westtex(aux, j + 2, data);
+		i--;
 	}
 	/* El parámetro j va a ser donde acaben los datos y empiece el mapa */
 	allocate_map(data, j, aux);
-	/*j = ft_strstr2(aux, "R");
-	ft_resolution(aux, j + 1, data);
-	j = ft_strstr2(aux, "F");
-	ft_floorcol(aux, j + 1, data);
-	j = ft_strstr2(aux, "C");
-	ft_ceilcol(aux, j + 1, data);*/
 }
 
 int		ft_resolution(char *aux, int i, t_data *data)
@@ -116,7 +110,8 @@ int		ft_floorcol(char *aux, int i, t_data *data)
 	data->floor.B = ft_atoi(aux + i);
 	while(ft_isdigit(aux[i]) || aux[i] == ' ' || aux[i] == '\n')
 		i++;
-	//printf("(%i, %i, %i)\n", data->floor.R, data->floor.G, data->floor.B);
+	data->floor_col = ft_strjoin("0x", ft_strjoin(to_base(data->floor.R),
+			ft_strjoin(to_base(data->floor.G), to_base(data->floor.B))));
 	return (i);
 }
 
@@ -133,8 +128,65 @@ int		ft_ceilcol(char *aux, int i, t_data *data)
 	i = i + count_nb(data->ceil.B);
 	while(aux[i] == '\n')
 		i++;
-	//printf("(%i, %i, %i)\n", data->ceil.R, data->ceil.G, data->ceil.B);
+	data->ceil_col = ft_strjoin("0x", ft_strjoin(to_base(data->ceil.R),
+			ft_strjoin(to_base(data->ceil.G), to_base(data->ceil.B))));
 	return (i);
+}
+
+int		ft_northtex(char *aux, int i, t_data *data)
+{
+	int		icpy;
+
+	i = skip_spaces(aux, i);
+	icpy = i;
+	while (!ft_isspace(aux[icpy]))
+		icpy++;
+	data->texture.N = ft_getpath(aux, i, icpy);
+	while (aux[icpy] == '\n')
+		icpy++;
+	return (icpy);
+}
+
+int		ft_southtex(char *aux, int i, t_data *data)
+{
+	int		icpy;
+
+	i = skip_spaces(aux, i);
+	icpy = i;
+	while (!ft_isspace(aux[icpy]))
+		icpy++;
+	data->texture.S = ft_getpath(aux, i, icpy);
+	while (aux[icpy] == '\n')
+		icpy++;
+	return (icpy);
+}
+
+int		ft_easttex(char *aux, int i, t_data *data)
+{
+	int		icpy;
+
+	i = skip_spaces(aux, i);
+	icpy = i;
+	while (!ft_isspace(aux[icpy]))
+		icpy++;
+	data->texture.E = ft_getpath(aux, i, icpy);
+	while (aux[icpy] == '\n')
+		icpy++;
+	return (icpy);
+}
+
+int		ft_westtex(char *aux, int i, t_data *data)
+{
+	int		icpy;
+
+	i = skip_spaces(aux, i);
+	icpy = i;
+	while (!ft_isspace(aux[icpy]))
+		icpy++;
+	data->texture.W = ft_getpath(aux, i, icpy);
+	while (aux[icpy] == '\n')
+		icpy++;
+	return (icpy);
 }
 
 void	allocate_map(t_data *data, int j, char *aux)
@@ -409,7 +461,7 @@ void	calculations_ray(t_player *player, int x, int resx)
 	//player->delta_dist.x =  fabs(1 / player->ray_dir.x);
 	//player->delta_dist.x = fabs(1 / player->ray_dir.y);
 	//player->delta_dist.x = (player->ray_dir.y == 0) ? 0 : ((player->ray_dir.x == 0) ? 1 : fabs(1 / player->ray_dir.x));
-    //player->delta_dist.y = (player->ray_dir.x == 0) ? 0 : ((player->ray_dir.y == 0) ? 1 : fabs(1 / player->ray_dir.y));
+	//player->delta_dist.y = (player->ray_dir.x == 0) ? 0 : ((player->ray_dir.y == 0) ? 1 : fabs(1 / player->ray_dir.y));
 	player->hit = 0;
 	player->side = 0;
 	player->step = create_ivec(0, 0);
@@ -599,7 +651,7 @@ void	move_towards(t_data *data)
 	t_player	*player;
 
 	player = data->player;
-	x = player->pos.x + M_SPEED * player->dir.x + 0.2 * nb_sign(player->dir.x);
+	x = player->pos.x + M_SPEED * player->dir.x;
 	y = player->pos.y;
 	if (x < data->c && y < data->l && data->map[y][x] == '0')
 		data->player->pos.x += M_SPEED * player->dir.x;
@@ -614,8 +666,8 @@ void	move_towards(t_data *data)
 		ft_putchar_fd('\n', 1);
 		ft_putchar_fd('\n', 1);
 	}*/
-	x = player->pos.x;
-	y = player->pos.y + M_SPEED * player->dir.y - 0.2;
+	x = player->pos.x ;
+	y = player->pos.y + M_SPEED * player->dir.y;
 	/*if (x < data->c)
 	{
 		ft_putstr_fd("primera\n", 1);
@@ -653,14 +705,14 @@ void	move_backwards(t_data *data)
 	t_player	*player;
 
 	player = data->player;
-	x = player->pos.x - M_SPEED * player->dir.x + 0.2 * player->dir.x;
+	x = player->pos.x - M_SPEED2 * player->dir.x;
 	y = player->pos.y;
 	if (x < data->c && y < data->l && data->map[y][x] == '0')
-		data->player->pos.x -= M_SPEED * player->dir.x;
+		data->player->pos.x -= M_SPEED2 * player->dir.x;
 	x = player->pos.x;
-	y = player->pos.y - M_SPEED * player->dir.y + 0.2;
+	y = player->pos.y - M_SPEED2 * player->dir.y;
 	if (x < data->c && y < data->l && data->map[y][x] == '0')
-		data->player->pos.y -= M_SPEED * player->dir.y;
+		data->player->pos.y -= M_SPEED2 * player->dir.y;
 }
 
 void	move_right(t_data *data)
@@ -670,7 +722,7 @@ void	move_right(t_data *data)
 	t_player	*player;
 
 	player = data->player;
-	x = player->pos.x - M_SPEED * player->dir.y + 0.2;
+	x = player->pos.x - M_SPEED * player->dir.y;
 	y = player->pos.y;
 	if (x < data->c && y < data->l && data->map[y][x] == '0')
 		data->player->pos.x -= M_SPEED * player->dir.y;
@@ -687,7 +739,7 @@ void	move_left(t_data *data)
 	t_player	*player;
 
 	player = data->player;
-	x = player->pos.x + M_SPEED * player->dir.y - 0.2;
+	x = player->pos.x + M_SPEED * player->dir.y;
 	y = player->pos.y;
 	if (x < data->c && y < data->l && data->map[y][x] == '0')
 		data->player->pos.x += M_SPEED * player->dir.y;

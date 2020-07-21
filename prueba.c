@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/30 17:54:57 by isfernan          #+#    #+#             */
-/*   Updated: 2020/07/01 19:37:11 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/21 18:26:26 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,92 +14,23 @@
 #include <math.h>
 #include <stdio.h>
 
-int		condition(int i, int j)
+// Esto imprime la imagen del ágila
+
+int     main(void)
 {
-	if (sqrt(pow(i - 100, 2) + pow(j - 100, 2)) <= 20)
-		return (1);
-	return (0);
+    void    *mlx;
+	void	*win;
+    void    *img;
+    char    *relative_path = "./textures/eagle.xpm";
+    int     img_width;
+    int     img_height;
+
+	img_width = 700;
+	img_height = 700;
+    mlx = mlx_init();
+	win = mlx_new_window(mlx, 700, 700, "prueba");
+    img = mlx_xpm_file_to_image(mlx, relative_path, &img_width, &img_height);
+	printf("%s", img);
+	mlx_put_image_to_window(mlx, win, img, 0, 0);
+	mlx_loop(mlx);
 }
-
-int		condition2()
-{
-	int	*a;
-	int	b;
-
-	a = &b;
-	b = 9;
-	return (*a);
-}
-
-int main()
-{
-	void *mlx_ptr;
-	void *win_ptr;
-	int i = 25;
-	int j;
-	//int theta = 0;
-	//int r = 80;
-
-	mlx_ptr = mlx_init();
-	win_ptr = mlx_new_window(mlx_ptr, 500, 500, "prueba");
-
-	while (i < 50)
-	{
-		j = 25;
-		while (j < 50)
-		{
-			mlx_pixel_put(mlx_ptr, win_ptr, i, j, 0xFFFF00);
-			j++;
-		}
-		i++;
-	}
-	i = mlx_key_hook(win_ptr, &condition2, mlx_ptr);
-	printf("%i", i);
-	/*i = 80;
-	while (i < 120)
-	{
-		j = 80;
-		while (j < 120)
-		{
-			if (condition(i, j))
-				mlx_pixel_put(mlx_ptr, win_ptr, i, j, 0xFFFFFF);
-			j++;
-		}
-		i++;
-	}
-	j = 200;
-	while (j < 275)
-	{
-		i = 200;
-		while (i <= j)
-		{
-			mlx_pixel_put(mlx_ptr, win_ptr, i, j, 0x00FF00);
-			i++;
-		}
-		j++;
-	}
-	j = 20;
-	while (j < 60)
-	{
-		i = 100;
-		while (i <= (j + 80))
-		{
-			mlx_pixel_put(mlx_ptr, win_ptr, i, j, 0x00BBAA);
-			i++;
-		}
-		j++;
-	}
-	j = 100;
-	while (j < 150)
-	{
-		i = 150;
-		while (i <= ((j - 150) * (1 / 150 * 170) + 170))
-		{
-			mlx_pixel_put(mlx_ptr, win_ptr, i, j, 0x00BBAA);
-			i++;
-		}
-		j++;
-	}*/
-	mlx_loop(mlx_ptr);
-}
-

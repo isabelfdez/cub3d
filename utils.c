@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 20:15:19 by aserrano          #+#    #+#             */
-/*   Updated: 2020/07/20 20:20:24 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/07/21 20:06:10 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -319,4 +319,40 @@ int		nb_sign(int a)
 		return (-1);
 	else
 		return (0);
+}
+
+char	*ft_getpath(char *aux, int i, int icpy)
+{
+	char	*str;
+	int		j;
+
+	j = 0;
+	str = malloc(sizeof(char) * (icpy - i + 1));
+	while (i < icpy)
+	{
+		str[j] = aux[i];
+		i++;
+		j++;
+	}
+	str[j] = '\0';
+	return (str);
+}
+
+char	*to_base(unsigned int nb)
+{
+	char	*str;
+	char	*base;
+	int		j;
+
+	base = "0123456789ABCDEF";
+	j = 0;
+	str = malloc(sizeof(char) * 3);
+	str[1] = base[nb % 16];
+	nb = nb / 16;
+    if (nb < 10)
+        str[0] = nb + '0';
+    else
+        str[0] = nb - 10 + 'A';
+	str[2] = '\0';
+    return (str);
 }

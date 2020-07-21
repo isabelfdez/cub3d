@@ -1,5 +1,11 @@
 R   1920 1080
 
+NO  ./textures/bluestone.xmp
+SO ./textures/eagle.xmp
+EA  ./textures/bluestone.xmp
+WE   ./textures/wall_1.xmp
+
+
 F   220,  100,0
 C 225,30  ,3
 
