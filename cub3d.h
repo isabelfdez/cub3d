@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/07/21 20:15:41 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/08/17 16:51:20 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ typedef	struct	s_ivector
 
 typedef	struct	s_player
 {
-	t_dvector	pos;		/* Coordinates of the playes */
+	t_dvector	pos;		/* Coordinates of the player */
 	t_dvector	dir;		/* Direction that the player is pointing to */
 	t_dvector	cam_plane;	/* Amplitude of the player's view */
 	double		cameraX;	/* Position of the camera in the camera plane */
@@ -175,6 +175,7 @@ char	*to_base(unsigned int nb);
 void	openWindow(t_data *data);
 void	draw_screen(t_data *data, t_player *player);
 void	verLine(int x, t_data *data, t_player *player);
+void	verLine_tex(int x, t_data *data, t_player *player);
 
 int		loop_manager(void *param);
 void	key_manager(t_data *data);
