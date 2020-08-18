@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/07/21 20:19:09 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/08/18 18:21:06 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,15 @@
 // Hay que hacer que no llegue a pegarse del todo a la pared porque si no se buggea
 // (no se mueve porque está atrapado en una pared y detecta que está rodeado por paredes)
 // Esto lo he intentado arreglar poniendo lo de 0.2 * nb_sign(player->dir.x) pero está mal
+
+
+// Primero de todo, hay que leer el comentario que está en draw.c (es lo que estoy
+// haciendo ahora).
+
+// Lo último que he hecho ha sido modificar la función ft_northtex de modo que con cada
+// textura cree una imagen y tenga los datos necesarios para poder leer el color de cada
+// pixel. Me falta hacerlo en las demás funciones (las de las texturas sur, este y oeste).
+
 
 int	main(int argc, char **argv)
 {
@@ -62,6 +71,8 @@ void	ft_readfile(char *aux)
 	i = 7;
 	if (!(data = malloc(sizeof(t_data))))
 		return ; /* Aquí hay que ver qué hacemos */
+	data->tex_w = TEX_W;
+	data->tex_h = TEX_H;
 	while (i > 0) /* Si uno de los parámetros no está, no sale de aquí */
 	{
 		if (aux[j] == 'R')
@@ -141,9 +152,16 @@ int		ft_northtex(char *aux, int i, t_data *data)
 	icpy = i;
 	while (!ft_isspace(aux[icpy]))
 		icpy++;
-	data->texture.N = ft_getpath(aux, i, icpy);
-	while (aux[icpy] == '\n')
-		icpy++;
+	if ((data->texture[TEX_N].path = ft_getpath(aux, i, icpy)))
+	{
+		while (aux[icpy] == '\n')
+			icpy++;
+		if ((data->texture[TEX_N].texim.img = mlx_xpm_file_to_image(data->win_ptr,
+			data->texture[TEX_N].path, &data->tex_w, &data->tex_h)))
+			data->texture[TEX_N].texim.addr = mlx_get_data_addr
+			(data->texture[TEX_N].texim.img, &data->texture[TEX_N].texim.bits_per_pixel,
+			&data->texture[TEX_N].texim.line_length, &data->texture[TEX_N].texim.endian);
+	}
 	return (icpy);
 }
 
@@ -155,7 +173,7 @@ int		ft_southtex(char *aux, int i, t_data *data)
 	icpy = i;
 	while (!ft_isspace(aux[icpy]))
 		icpy++;
-	data->texture.S = ft_getpath(aux, i, icpy);
+	data->texture[TEX_S].path = ft_getpath(aux, i, icpy);
 	while (aux[icpy] == '\n')
 		icpy++;
 	return (icpy);
@@ -169,7 +187,7 @@ int		ft_easttex(char *aux, int i, t_data *data)
 	icpy = i;
 	while (!ft_isspace(aux[icpy]))
 		icpy++;
-	data->texture.E = ft_getpath(aux, i, icpy);
+	data->texture[TEX_E].path = ft_getpath(aux, i, icpy);
 	while (aux[icpy] == '\n')
 		icpy++;
 	return (icpy);
@@ -183,7 +201,7 @@ int		ft_westtex(char *aux, int i, t_data *data)
 	icpy = i;
 	while (!ft_isspace(aux[icpy]))
 		icpy++;
-	data->texture.W = ft_getpath(aux, i, icpy);
+	data->texture[TEX_WE].path = ft_getpath(aux, i, icpy);
 	while (aux[icpy] == '\n')
 		icpy++;
 	return (icpy);

@@ -6,15 +6,20 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/08/17 16:51:20 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/08/18 18:15:07 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
+# define TEXTURES 4
 # define TEX_W 64
 # define TEX_H 64
+# define TEX_N 0
+# define TEX_S 1
+# define TEX_E 2
+# define TEX_WE 3
 
 # define RIGHT 2
 # define LEFT 0
@@ -49,13 +54,13 @@ typedef struct  s_image
     int         endian;
 }               t_image;
 
-typedef	struct	s_texture
+typedef	struct	s_tex
 {
-	char		*N;
-	char		*S;
-	char		*E;
-	char		*W;
-}				t_texture;
+	char		*path;
+	t_image		texim;
+}				t_tex;
+
+
 
 typedef	struct	s_key
 {
@@ -114,7 +119,9 @@ typedef struct	s_data
 	t_key		key;
 	t_player	*player;
 	t_image		image;
-	t_texture	texture;
+	t_tex		texture[TEXTURES];
+	int			tex_w;
+	int			tex_h;
 }				t_data;
 
 char	*ft_gnlcub(char **argv);

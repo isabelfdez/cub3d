@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/30 17:52:28 by isfernan          #+#    #+#             */
-/*   Updated: 2020/08/17 17:47:13 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/08/18 18:04:55 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	draw_screen(t_data *data, t_player *player)
 		initialDDA(player);
 		DDA(player, data);
 		fishEye(player);
-		verLine_tex(x, data, player);
+		verLine(x, data, player);
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->image.img, 0, 0);
@@ -116,10 +116,10 @@ void	verLine(int x, t_data *data, t_player *player)
 ** en el que me encuentro */
 
 /* Para arreglar esto tengo que mirar en el 42-cub3d. Tiene una función llamada
-** get_tex_color. La cosa e sque todo lo que yo tengo en la estructura de imagen,
+** get_tex_color. La cosa es que todo lo que yo tengo en la estructura de imagen,
 ** este señor lo tiene en la de la textura */
 
-void	verLine_tex(int x, t_data *data, t_player *player)
+/*void	verLine_tex(int x, t_data *data, t_player *player)
 {
 	int		start;
 	int		end;
@@ -165,7 +165,7 @@ void	verLine_tex(int x, t_data *data, t_player *player)
 		my_mlx_pixel_put(&data->image, x, i, data->floor_col);
 		i++;	
 	}
-	/*
+	ESTO TENDRÍA QUE IR COMENTADO
 	while (i < end)
 	{
 		if (player->side == 0)
@@ -184,5 +184,23 @@ void	verLine_tex(int x, t_data *data, t_player *player)
 	{
 		my_mlx_pixel_put(&data->image, x, i, data->floor_col);
 		i++;	
-	}*/
-}
+	}
+}*/
+
+/* 
+** Así es como define la estructura de la textura en 42-cub3d
+
+typedef struct	s_tex
+{
+	char	*path;
+	void	*tex;
+	void	*ptr;
+	t_pos	start;
+	t_pos	end;
+	int		width;
+	int		height;
+	int		bpp;
+	int		size_line;
+	int		endian;
+}				t_tex;
+*/
