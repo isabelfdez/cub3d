@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/30 17:52:28 by isfernan          #+#    #+#             */
-/*   Updated: 2020/08/18 18:04:55 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/08/31 19:48:43 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	openWindow(t_data *data)
 {
-    data->mlx_ptr = mlx_init();
 	data->win_ptr = mlx_new_window(data->mlx_ptr, data->resx, data->resy, "Raycaster");
 	data->image.img = mlx_new_image(data->mlx_ptr, data->resx, data->resy);
 	data->image.addr = mlx_get_data_addr(data->image.img, 
@@ -35,7 +34,7 @@ void	draw_screen(t_data *data, t_player *player)
 		initialDDA(player);
 		DDA(player, data);
 		fishEye(player);
-		verLine(x, data, player);
+		verLine_tex(x, data, player);
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->image.img, 0, 0);
@@ -119,7 +118,7 @@ void	verLine(int x, t_data *data, t_player *player)
 ** get_tex_color. La cosa es que todo lo que yo tengo en la estructura de imagen,
 ** este señor lo tiene en la de la textura */
 
-/*void	verLine_tex(int x, t_data *data, t_player *player)
+void	verLine_tex(int x, t_data *data, t_player *player)
 {
 	int		start;
 	int		end;
@@ -151,41 +150,22 @@ void	verLine(int x, t_data *data, t_player *player)
 	texPos = (start - data->resy / 2 + line_h / 2) * step;
 	while (i < start)
 	{
-		my_mlx_pixel_put(&data->image, x, i, data->ceil_col);
+		my_mlx_pixel_put(&data->image, x, i, 0x000000);
 		i++;
 	}
 	while (i < end)
 	{
 		texY = (int)texPos;
 		texPos += step;
-		my_mlx_pixel_put(&data->image, x, i, )
-	}
-	while (i < data->resy)
-	{
-		my_mlx_pixel_put(&data->image, x, i, data->floor_col);
-		i++;	
-	}
-	ESTO TENDRÍA QUE IR COMENTADO
-	while (i < end)
-	{
-		if (player->side == 0)
-		{
-			wallX = player->pos.y + player->pwd * player->ray_dir.y;
-			my_mlx_pixel_put(&data->image, x, i, 0xFFFF00);
-		}
-		else
-		{
-			wallX = player->pos.x + player->pwd * player->ray_dir.x;
-			my_mlx_pixel_put(&data->image, x, i, 0xFFE000);
-		}
+		my_mlx_pixel_put(&data->image, x, i, get_tex_color(data, texX, texY));
 		i++;
 	}
 	while (i < data->resy)
 	{
-		my_mlx_pixel_put(&data->image, x, i, data->floor_col);
+		my_mlx_pixel_put(&data->image, x, i, 0x000000);
 		i++;	
 	}
-}*/
+}
 
 /* 
 ** Así es como define la estructura de la textura en 42-cub3d
@@ -204,3 +184,33 @@ typedef struct	s_tex
 	int		endian;
 }				t_tex;
 */
+
+int		get_tex_color(t_data *data, int texX, int texY)
+{
+	if (texX >= 0 && texX < data->tex_w
+		&& texY >= 0 && texY < data->tex_h)
+		{
+			return (*(int *)(data->texture[TEX_N].texim.addr
+				+ (4 * data->tex_w * texY)
+				+ (4 * texX)));
+		}
+	return (0x0);
+}
+
+/*int		texture_number(t_data *data)
+{
+	double		x;
+	double		y;
+
+	x = data->player->ray_dir.x;
+	y = data->player->ray_dir.y;
+	if (fabs(x / y) < 1 && x > 0)
+		return (TEX_E);
+	if (fabs(x / y) < 1 && x < 0)
+		return (TEX_WE);
+	if (fabs(x / y) > 1 && y > 0)
+		return (TEX_N);
+	if (fabs(x / y) > 1 && y < 0)
+		return (TEX_S);
+	return (0);
+}*/

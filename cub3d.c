@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/08/18 18:21:06 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/08/31 19:31:58 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	ft_readfile(char *aux)
 		return ; /* Aquí hay que ver qué hacemos */
 	data->tex_w = TEX_W;
 	data->tex_h = TEX_H;
+	data->mlx_ptr = mlx_init();
 	while (i > 0) /* Si uno de los parámetros no está, no sale de aquí */
 	{
 		if (aux[j] == 'R')
@@ -152,16 +153,15 @@ int		ft_northtex(char *aux, int i, t_data *data)
 	icpy = i;
 	while (!ft_isspace(aux[icpy]))
 		icpy++;
-	if ((data->texture[TEX_N].path = ft_getpath(aux, i, icpy)))
-	{
+	data->texture[TEX_N].path = "/Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/bluestone.xpm";
+	//if ((data->texture[TEX_N].path = ft_getpath(aux, i, icpy)))
 		while (aux[icpy] == '\n')
 			icpy++;
-		if ((data->texture[TEX_N].texim.img = mlx_xpm_file_to_image(data->win_ptr,
+		if ((data->texture[TEX_N].texim.img = mlx_xpm_file_to_image(data->mlx_ptr,
 			data->texture[TEX_N].path, &data->tex_w, &data->tex_h)))
 			data->texture[TEX_N].texim.addr = mlx_get_data_addr
 			(data->texture[TEX_N].texim.img, &data->texture[TEX_N].texim.bits_per_pixel,
 			&data->texture[TEX_N].texim.line_length, &data->texture[TEX_N].texim.endian);
-	}
 	return (icpy);
 }
 
@@ -173,9 +173,15 @@ int		ft_southtex(char *aux, int i, t_data *data)
 	icpy = i;
 	while (!ft_isspace(aux[icpy]))
 		icpy++;
-	data->texture[TEX_S].path = ft_getpath(aux, i, icpy);
-	while (aux[icpy] == '\n')
-		icpy++;
+	//if ((data->texture[TEX_S].path = ft_getpath(aux, i, icpy)))
+	data->texture[TEX_S].path = "/Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/bluestone.xpm";
+		while (aux[icpy] == '\n')
+			icpy++;
+		if ((data->texture[TEX_S].texim.img = mlx_xpm_file_to_image(data->mlx_ptr,
+			data->texture[TEX_S].path, &data->tex_w, &data->tex_h)))
+			data->texture[TEX_S].texim.addr = mlx_get_data_addr
+			(data->texture[TEX_S].texim.img, &data->texture[TEX_S].texim.bits_per_pixel,
+			&data->texture[TEX_S].texim.line_length, &data->texture[TEX_S].texim.endian);
 	return (icpy);
 }
 
@@ -187,9 +193,15 @@ int		ft_easttex(char *aux, int i, t_data *data)
 	icpy = i;
 	while (!ft_isspace(aux[icpy]))
 		icpy++;
-	data->texture[TEX_E].path = ft_getpath(aux, i, icpy);
-	while (aux[icpy] == '\n')
-		icpy++;
+	//if ((data->texture[TEX_E].path = ft_getpath(aux, i, icpy)))
+	data->texture[TEX_E].path = "/Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/bluestone.xpm";
+		while (aux[icpy] == '\n')
+			icpy++;
+		if ((data->texture[TEX_E].texim.img = mlx_xpm_file_to_image(data->mlx_ptr,
+			data->texture[TEX_E].path, &data->tex_w, &data->tex_h)))
+			data->texture[TEX_E].texim.addr = mlx_get_data_addr
+			(data->texture[TEX_E].texim.img, &data->texture[TEX_E].texim.bits_per_pixel,
+			&data->texture[TEX_E].texim.line_length, &data->texture[TEX_E].texim.endian);
 	return (icpy);
 }
 
@@ -201,9 +213,15 @@ int		ft_westtex(char *aux, int i, t_data *data)
 	icpy = i;
 	while (!ft_isspace(aux[icpy]))
 		icpy++;
-	data->texture[TEX_WE].path = ft_getpath(aux, i, icpy);
-	while (aux[icpy] == '\n')
-		icpy++;
+	//if ((data->texture[TEX_WE].path = ft_getpath(aux, i, icpy)))
+	data->texture[TEX_WE].path = "/Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/bluestone.xpm";
+		while (aux[icpy] == '\n')
+			icpy++;
+		if ((data->texture[TEX_WE].texim.img = mlx_xpm_file_to_image(data->mlx_ptr,
+			data->texture[TEX_WE].path, &data->tex_w, &data->tex_h)))
+			data->texture[TEX_WE].texim.addr = mlx_get_data_addr
+			(data->texture[TEX_WE].texim.img, &data->texture[TEX_WE].texim.bits_per_pixel,
+			&data->texture[TEX_WE].texim.line_length, &data->texture[TEX_WE].texim.endian);
 	return (icpy);
 }
 
@@ -262,7 +280,7 @@ void	fill_map(t_data *data, int jcpy[], char *aux)
 	}
 	free(aux);
 	initialize_keys(data);
-	print_map(data);
+	//print_map(data);
 	ft_putendl_fd(data->map[6], 1);
 	alter_map(data);
 	check_map_content(data);

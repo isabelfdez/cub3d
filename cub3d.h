@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/08/18 18:15:07 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/08/31 19:45:38 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,9 @@ void	openWindow(t_data *data);
 void	draw_screen(t_data *data, t_player *player);
 void	verLine(int x, t_data *data, t_player *player);
 void	verLine_tex(int x, t_data *data, t_player *player);
+int		get_tex_color(t_data *data, int texX, int texY);
+void    my_mlx_pixel_put(t_image *data, int x, int y, int color);
+int		texture_number(t_data *data);
 
 int		loop_manager(void *param);
 void	key_manager(t_data *data);
