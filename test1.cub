@@ -1,9 +1,9 @@
 R   1920 1080
 
-NO  ./textures/bluestone.xmp
-SO ./textures/eagle.xmp
-EA  ./textures/bluestone.xmp
-WE   ./textures/wall_1.xmp
+NO  /Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/bluestone.xpm
+SO /Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/eagle.xpm
+EA  /Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/purplestone.xpm
+WE   /Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/wood.xpm
 
 
 F   220,  100,0
@@ -12,7 +12,7 @@ C 225,30  ,3
 
         1111111111111111111111111
         1000000000110000000000001
-        101100E001110000001000001
+        101100N001110000001000001
         1001000000000000000000001
 111111111011000001110000000000001
 100000000011000001110111111111111

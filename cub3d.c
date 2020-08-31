@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/08/31 19:31:58 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/08/31 20:17:27 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,8 @@
 // Esto lo he intentado arreglar poniendo lo de 0.2 * nb_sign(player->dir.x) pero está mal
 
 
-// Primero de todo, hay que leer el comentario que está en draw.c (es lo que estoy
-// haciendo ahora).
-
-// Lo último que he hecho ha sido modificar la función ft_northtex de modo que con cada
-// textura cree una imagen y tenga los datos necesarios para poder leer el color de cada
-// pixel. Me falta hacerlo en las demás funciones (las de las texturas sur, este y oeste).
+// Tengo puestas las texturas con el path entero (podría poner ./textures pero por
+// alguna razón esto no me funciona)
 
 
 int	main(int argc, char **argv)
@@ -153,8 +149,8 @@ int		ft_northtex(char *aux, int i, t_data *data)
 	icpy = i;
 	while (!ft_isspace(aux[icpy]))
 		icpy++;
-	data->texture[TEX_N].path = "/Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/bluestone.xpm";
-	//if ((data->texture[TEX_N].path = ft_getpath(aux, i, icpy)))
+	if ((data->texture[TEX_N].path = ft_getpath(aux, i, icpy)))
+	{
 		while (aux[icpy] == '\n')
 			icpy++;
 		if ((data->texture[TEX_N].texim.img = mlx_xpm_file_to_image(data->mlx_ptr,
@@ -162,6 +158,7 @@ int		ft_northtex(char *aux, int i, t_data *data)
 			data->texture[TEX_N].texim.addr = mlx_get_data_addr
 			(data->texture[TEX_N].texim.img, &data->texture[TEX_N].texim.bits_per_pixel,
 			&data->texture[TEX_N].texim.line_length, &data->texture[TEX_N].texim.endian);
+	}
 	return (icpy);
 }
 
@@ -173,8 +170,8 @@ int		ft_southtex(char *aux, int i, t_data *data)
 	icpy = i;
 	while (!ft_isspace(aux[icpy]))
 		icpy++;
-	//if ((data->texture[TEX_S].path = ft_getpath(aux, i, icpy)))
-	data->texture[TEX_S].path = "/Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/bluestone.xpm";
+	if ((data->texture[TEX_S].path = ft_getpath(aux, i, icpy)))
+	{
 		while (aux[icpy] == '\n')
 			icpy++;
 		if ((data->texture[TEX_S].texim.img = mlx_xpm_file_to_image(data->mlx_ptr,
@@ -182,6 +179,7 @@ int		ft_southtex(char *aux, int i, t_data *data)
 			data->texture[TEX_S].texim.addr = mlx_get_data_addr
 			(data->texture[TEX_S].texim.img, &data->texture[TEX_S].texim.bits_per_pixel,
 			&data->texture[TEX_S].texim.line_length, &data->texture[TEX_S].texim.endian);
+	}
 	return (icpy);
 }
 
@@ -193,8 +191,8 @@ int		ft_easttex(char *aux, int i, t_data *data)
 	icpy = i;
 	while (!ft_isspace(aux[icpy]))
 		icpy++;
-	//if ((data->texture[TEX_E].path = ft_getpath(aux, i, icpy)))
-	data->texture[TEX_E].path = "/Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/bluestone.xpm";
+	if ((data->texture[TEX_E].path = ft_getpath(aux, i, icpy)))
+	{
 		while (aux[icpy] == '\n')
 			icpy++;
 		if ((data->texture[TEX_E].texim.img = mlx_xpm_file_to_image(data->mlx_ptr,
@@ -202,6 +200,7 @@ int		ft_easttex(char *aux, int i, t_data *data)
 			data->texture[TEX_E].texim.addr = mlx_get_data_addr
 			(data->texture[TEX_E].texim.img, &data->texture[TEX_E].texim.bits_per_pixel,
 			&data->texture[TEX_E].texim.line_length, &data->texture[TEX_E].texim.endian);
+	}
 	return (icpy);
 }
 
@@ -213,8 +212,8 @@ int		ft_westtex(char *aux, int i, t_data *data)
 	icpy = i;
 	while (!ft_isspace(aux[icpy]))
 		icpy++;
-	//if ((data->texture[TEX_WE].path = ft_getpath(aux, i, icpy)))
-	data->texture[TEX_WE].path = "/Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/bluestone.xpm";
+	if ((data->texture[TEX_WE].path = ft_getpath(aux, i, icpy)))
+	{
 		while (aux[icpy] == '\n')
 			icpy++;
 		if ((data->texture[TEX_WE].texim.img = mlx_xpm_file_to_image(data->mlx_ptr,
@@ -222,6 +221,7 @@ int		ft_westtex(char *aux, int i, t_data *data)
 			data->texture[TEX_WE].texim.addr = mlx_get_data_addr
 			(data->texture[TEX_WE].texim.img, &data->texture[TEX_WE].texim.bits_per_pixel,
 			&data->texture[TEX_WE].texim.line_length, &data->texture[TEX_WE].texim.endian);
+	}
 	return (icpy);
 }
 
@@ -467,6 +467,7 @@ void	start_raycasting(t_data *data)
 		player->dir = create_dvec(-1, 0);
 	player->cam_plane = create_dvec(0.66 * fabs(player->dir.y), 0.66 * fabs(player->dir.x)); // No estoy muy segura de esto
 	data->map[line_character(data)][col_character(data)] = '0';
+	data->player = player;
 	draw_screen(data, player);
 	/*while (x < data->resx)
 	{
@@ -477,7 +478,6 @@ void	start_raycasting(t_data *data)
 		draw_line(player, data);
 		x++;
 	}*/
-	data->player = player;
 	mlx_hook(data->win_ptr, 2, 1L << 0, key_pressed, data);
 	mlx_hook(data->win_ptr, 3, 1L << 1, key_released, data);
 	mlx_hook(data->win_ptr, 17, 1L << 17, close_window, data);

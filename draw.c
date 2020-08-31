@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/30 17:52:28 by isfernan          #+#    #+#             */
-/*   Updated: 2020/08/31 19:48:43 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/08/31 20:33:23 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,27 +190,27 @@ int		get_tex_color(t_data *data, int texX, int texY)
 	if (texX >= 0 && texX < data->tex_w
 		&& texY >= 0 && texY < data->tex_h)
 		{
-			return (*(int *)(data->texture[TEX_N].texim.addr
+			return (*(int *)(data->texture[texture_number(data)].texim.addr
 				+ (4 * data->tex_w * texY)
 				+ (4 * texX)));
 		}
 	return (0x0);
 }
 
-/*int		texture_number(t_data *data)
+int		texture_number(t_data *data)
 {
 	double		x;
 	double		y;
 
 	x = data->player->ray_dir.x;
 	y = data->player->ray_dir.y;
-	if (fabs(x / y) < 1 && x > 0)
+	if (fabs(y / x) < 1 && x > 0)
 		return (TEX_E);
-	if (fabs(x / y) < 1 && x < 0)
+	if (fabs(y / x) < 1 && x < 0)
 		return (TEX_WE);
-	if (fabs(x / y) > 1 && y > 0)
+	if (fabs(y / x) > 1 && y > 0)
 		return (TEX_N);
-	if (fabs(x / y) > 1 && y < 0)
+	if (fabs(y / x) > 1 && y < 0)
 		return (TEX_S);
 	return (0);
-}*/
+}
