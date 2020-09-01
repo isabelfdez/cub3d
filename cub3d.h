@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/08/31 19:45:38 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/01 20:23:33 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,6 @@ typedef	struct	s_tex
 	t_image		texim;
 }				t_tex;
 
-
-
 typedef	struct	s_key
 {
 	int			right;
@@ -84,6 +82,13 @@ typedef	struct	s_ivector
 	int			x;
 	int			y;
 }				t_ivector;
+
+typedef	struct	s_sprite
+{
+	int			num;		/* The number of sprites in the map */
+	t_tex		tex;		/* The texture of the sprite */
+	double		**arr;		/* The following data will be stored for each sprite: order, posx, posy, distance */
+}				t_sprite;
 
 typedef	struct	s_player
 {
@@ -120,6 +125,7 @@ typedef struct	s_data
 	t_player	*player;
 	t_image		image;
 	t_tex		texture[TEXTURES];
+	t_sprite	spr;
 	int			tex_w;
 	int			tex_h;
 }				t_data;
@@ -178,6 +184,8 @@ int		find_key_pressed(t_data *data);
 int		nb_sign(int a);
 char	*ft_getpath(char *aux, int i, int icpy);
 char	*to_base(unsigned int nb);
+void	count_sprites(t_data *data);
+char	check_order(t_data *data);
 
 void	openWindow(t_data *data);
 void	draw_screen(t_data *data, t_player *player);
@@ -186,6 +194,8 @@ void	verLine_tex(int x, t_data *data, t_player *player);
 int		get_tex_color(t_data *data, int texX, int texY);
 void    my_mlx_pixel_put(t_image *data, int x, int y, int color);
 int		texture_number(t_data *data);
+void	calculations_sprite(t_data *data, t_player *player);
+void	sort_sprite(t_data *data);
 
 int		loop_manager(void *param);
 void	key_manager(t_data *data);

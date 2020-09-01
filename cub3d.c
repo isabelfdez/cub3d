@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/08/31 20:17:27 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/01 19:03:43 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,12 +268,6 @@ void	fill_map(t_data *data, int jcpy[], char *aux)
 			c++;
 			jcpy[0]++;
 		}
-		/*if (aux[jcpy[0]] == '\n')
-		{
-			data->map[l][c] = aux[jcpy[0]];
-			c++;
-			jcpy[0]++;
-		}*/
 		jcpy[0]++;
 		data->map[l][c] = '\0';
 		l++;
@@ -281,16 +275,9 @@ void	fill_map(t_data *data, int jcpy[], char *aux)
 	free(aux);
 	initialize_keys(data);
 	//print_map(data);
-	ft_putendl_fd(data->map[6], 1);
 	alter_map(data);
 	check_map_content(data);
 	map_graph(data);
-	/*int		i = 0;
-	while (i < l)
-	{	
-		printf("%s\n", data->map[i]);
-		i++;
-	}*/
 }
 
 void	alter_map(t_data *data) /* Las filas no está NULL-terminated */
@@ -374,6 +361,7 @@ void	map_graph(t_data *data)
 		exit(EXIT_FAILURE);
 	}
 	check_character(data);
+	count_sprites(data);
 	start_raycasting(data);
 }
 
@@ -616,18 +604,38 @@ int		key_pressed(int key, void *param)
 		data->key.esc++;
 		return (0);
 	}
-	if (key == RIGHT && data->key.right == 0)
-		data->key.right++;
-	if (key == LEFT && data->key.left == 0)
-		data->key.left++;
+	if (key == RIGHT)
+	{
+		if ((data->dir1 == 'W' || data->dir1 == 'S') && data->key.left == 0)
+			data->key.left++;
+		if ((data->dir1 == 'E' || data->dir1 == 'N') && data->key.right == 0)
+			data->key.right++;
+	}
+	if (key == LEFT)
+	{
+		if ((data->dir1 == 'W' || data->dir1 == 'S') && data->key.right == 0)
+			data->key.right++;
+		if ((data->dir1 == 'E' || data->dir1 == 'N') && data->key.left == 0)
+			data->key.left++;
+	}
 	if (key == TOWARDS && data->key.towards == 0)
 		data->key.towards++;
 	if (key == BACKWARDS && data->key.backwards == 0)
 		data->key.backwards++;
-	if (key == CAM_RIGHT && data->key.arrow_right == 0)
-		data->key.arrow_right++;
-	if (key == CAM_LEFT && data->key.arrow_left == 0)
-		data->key.arrow_left++;
+	if (key == CAM_RIGHT)
+	{
+		if ((data->dir1 == 'W' || data->dir1 == 'S') && data->key.arrow_left == 0)
+			data->key.arrow_left++;
+		if ((data->dir1 == 'E' || data->dir1 == 'N') && data->key.arrow_right == 0)
+			data->key.arrow_right++;
+	}
+	if (key == CAM_LEFT)
+	{
+		if ((data->dir1 == 'W' || data->dir1 == 'S') && data->key.arrow_right == 0)
+			data->key.arrow_right++;
+		if ((data->dir1 == 'E' || data->dir1 == 'N') && data->key.arrow_left == 0)
+			data->key.arrow_left++;
+	}
 	return (0);
 }
 
@@ -636,18 +644,38 @@ int		key_released(int key, void *param)
 	t_data	*data;
 
 	data = (t_data *)param;
-	if (key == RIGHT && data->key.right == 1)
-		data->key.right--;
-	if (key == LEFT && data->key.left == 1)
-		data->key.left--;
+	if (key == RIGHT)
+	{
+		if ((data->dir1 == 'W' || data->dir1 == 'S') && data->key.left == 1)
+			data->key.left--;
+		if ((data->dir1 == 'E' || data->dir1 == 'N') && data->key.right == 1)
+			data->key.right--;
+	}
+	if (key == LEFT)
+	{
+		if ((data->dir1 == 'W' || data->dir1 == 'S') && data->key.right == 1)
+			data->key.right--;
+		if ((data->dir1 == 'E' || data->dir1 == 'N') && data->key.left == 1)
+			data->key.left--;
+	}
 	if (key == TOWARDS && data->key.towards == 1)
 		data->key.towards--;
 	if (key == BACKWARDS && data->key.backwards == 1)
 		data->key.backwards--;
-	if (key == CAM_RIGHT && data->key.arrow_right == 1)
-		data->key.arrow_right--;
-	if (key == CAM_LEFT && data->key.arrow_left == 1)
-		data->key.arrow_left--;
+	if (key == CAM_RIGHT)
+	{
+		if ((data->dir1 == 'W' || data->dir1 == 'S') && data->key.arrow_left == 1)
+			data->key.arrow_left--;
+		if ((data->dir1 == 'E' || data->dir1 == 'N') && data->key.arrow_right == 1)
+			data->key.arrow_right--;
+	}
+	if (key == CAM_LEFT)
+	{
+		if ((data->dir1 == 'W' || data->dir1 == 'S') && data->key.arrow_right == 1)
+			data->key.arrow_right--;
+		if ((data->dir1 == 'E' || data->dir1 == 'N') && data->key.arrow_left == 1)
+			data->key.arrow_left--;
+	}
 	return (0);
 }
 
@@ -691,47 +719,10 @@ void	move_towards(t_data *data)
 	y = player->pos.y;
 	if (x < data->c && y < data->l && data->map[y][x] == '0')
 		data->player->pos.x += M_SPEED * player->dir.x;
-	/*if (x < data->c && y < data->l && data->map[x][y] == '0')
-	{
-		ft_putstr_fd("previous ", 1);
-		ft_putnbr_fd((int)(player->pos.x * 1000), 1);
-		ft_putchar_fd('\n', 1);
-		data->player->pos.x += M_SPEED * player->dir.x;		
-		ft_putstr_fd("later ", 1);
-		ft_putnbr_fd((int)(player->pos.x * 1000), 1);
-		ft_putchar_fd('\n', 1);
-		ft_putchar_fd('\n', 1);
-	}*/
-	x = player->pos.x ;
+	x = player->pos.x;
 	y = player->pos.y + M_SPEED * player->dir.y;
-	/*if (x < data->c)
-	{
-		ft_putstr_fd("primera\n", 1);
-		if (y < data->l)
-		{
-			ft_putstr_fd("segunda\n", 1);
-			if (data->map[y][x] == '0')
-			{
-				ft_putstr_fd("tercera\n", 1);
-				data->player->pos.y += M_SPEED * player->dir.y;
-			}
-			else
-			{
-				printf("el caracter que impide avanzar es: (%i, %i), que es %c\n", y, x, data->map[y][x]);
-			}
-		}
-	}*/
 	if (x < data->c && y < data->l && data->map[y][x] == '0')
-	{
-		//ft_putstr_fd("previous ", 1);
-		//ft_putnbr_fd((int)(player->pos.y * 1000), 1);
-		//ft_putchar_fd('\n', 1);
 		data->player->pos.y += M_SPEED * player->dir.y;
-		//ft_putstr_fd("later ", 1);
-		//ft_putnbr_fd((int)(player->pos.y * 1000), 1);
-		//ft_putchar_fd('\n', 1);
-		//ft_putchar_fd('\n', 1);
-	}
 }
 
 void	move_backwards(t_data *data)

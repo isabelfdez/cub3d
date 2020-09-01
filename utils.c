@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 20:15:19 by aserrano          #+#    #+#             */
-/*   Updated: 2020/07/21 20:06:10 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/01 20:15:39 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,4 +355,40 @@ char	*to_base(unsigned int nb)
         str[0] = nb - 10 + 'A';
 	str[2] = '\0';
     return (str);
+}
+
+void	count_sprites(t_data *data)
+{
+	int		i;
+	int		j;
+
+	data->spr.num = 0;
+	i = 0;
+	while (i < data->l)
+	{
+		j = 0;
+		while (j < data->c)
+		{
+			if (data->map[i][j] == '2')
+				data->spr.num++;
+			j++;
+		}
+		i++;
+	}
+}
+
+char	check_order(t_data *data)
+{
+	int		i;
+	char	flag;
+
+	i = 0;
+	flag = 'V';
+	while (i < data->spr.num - 1)
+	{
+		if (data->spr.arr[i][3] < data->spr.arr[i + 1][3])
+			flag = 'F';
+		i++;
+	}
+	return (flag);
 }

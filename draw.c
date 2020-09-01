@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/30 17:52:28 by isfernan          #+#    #+#             */
-/*   Updated: 2020/08/31 20:33:23 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/01 20:20:24 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ void	draw_screen(t_data *data, t_player *player)
 		verLine_tex(x, data, player);
 		x++;
 	}
+	calculations_sprite(data, player);
+	sort_sprite(data);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->image.img, 0, 0);
 }
 
@@ -110,14 +112,6 @@ void	verLine(int x, t_data *data, t_player *player)
 		}
 }
 
-/* Esto no puede estar bien porque estoy teniendo el mismo error que la otra vez;
-** recorro los x dos veces, porque uno de los parámetros de la función ya es el x
-** en el que me encuentro */
-
-/* Para arreglar esto tengo que mirar en el 42-cub3d. Tiene una función llamada
-** get_tex_color. La cosa es que todo lo que yo tengo en la estructura de imagen,
-** este señor lo tiene en la de la textura */
-
 void	verLine_tex(int x, t_data *data, t_player *player)
 {
 	int		start;
@@ -167,24 +161,6 @@ void	verLine_tex(int x, t_data *data, t_player *player)
 	}
 }
 
-/* 
-** Así es como define la estructura de la textura en 42-cub3d
-
-typedef struct	s_tex
-{
-	char	*path;
-	void	*tex;
-	void	*ptr;
-	t_pos	start;
-	t_pos	end;
-	int		width;
-	int		height;
-	int		bpp;
-	int		size_line;
-	int		endian;
-}				t_tex;
-*/
-
 int		get_tex_color(t_data *data, int texX, int texY)
 {
 	if (texX >= 0 && texX < data->tex_w
@@ -199,18 +175,70 @@ int		get_tex_color(t_data *data, int texX, int texY)
 
 int		texture_number(t_data *data)
 {
-	double		x;
-	double		y;
-
-	x = data->player->ray_dir.x;
-	y = data->player->ray_dir.y;
-	if (fabs(y / x) < 1 && x > 0)
+	if (data->player->side == 0 && data->player->ray_dir.x > 0)
 		return (TEX_E);
-	if (fabs(y / x) < 1 && x < 0)
+	if (data->player->side == 0 && data->player->ray_dir.x < 0)
 		return (TEX_WE);
-	if (fabs(y / x) > 1 && y > 0)
-		return (TEX_N);
-	if (fabs(y / x) > 1 && y < 0)
+	if (data->player->side == 1 && data->player->ray_dir.y > 0)
 		return (TEX_S);
+	if (data->player->side == 1 && data->player->ray_dir.y < 0)
+		return (TEX_N);
 	return (0);
+}
+
+void	calculations_sprite(t_data *data, t_player *player)
+{
+	int		i;
+	int		c;
+	int		l;
+
+	i = -1;
+	l = 0;
+	data->spr.arr = malloc(sizeof(double *) * data->spr.num);
+	while (++i < data->spr.num)
+		data->spr.arr[i] = malloc((sizeof(double)) * 4);
+	i = 0;
+	while (l < data->l && i < data->spr.num)
+	{
+		c = 0;
+		while (c < data->c && i < data->spr.num)
+		{
+			if (data->map[l][c] == '2')
+			{
+				data->spr.arr[i][0] = i;
+				data->spr.arr[i][1] = (double)c + 0.5;
+				data->spr.arr[i][2] = (double)l + 0.5;
+				data->spr.arr[i][3] = pow(player->pos.x - data->spr.arr[i][1], 2)
+					+ pow(player->pos.y - data->spr.arr[i][2], 2);
+				i++;
+			}
+			c++;
+		}
+		l++;
+	}
+}
+
+void	sort_sprite(t_data *data)
+{
+	char	flag;
+	int		i;
+	double	*aux;
+
+	flag = 'F';
+	i = 0;
+	while (flag == 'F')
+	{
+		i = 0;
+		while (i < data->spr.num - 1)
+		{
+			if (data->spr.arr[i][3] < data->spr.arr[i + 1][3])
+			{
+				aux = data->spr.arr[i];
+				data->spr.arr[i] = data->spr.arr[i + 1];
+				data->spr.arr[i + 1] = aux;
+			}
+			i++;
+		}
+		flag = check_order(data);
+	}
 }
