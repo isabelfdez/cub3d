@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/30 17:52:28 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/02 17:37:47 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/02 18:46:34 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,6 +287,10 @@ void	transform_sprite(t_data *data, t_player *player, int i)
 	x = data->spr.startX - 1;
 	if ((data->spr.endY = data->resy / 2 + data->spr.h / 2) >= data->resy)
 		data->spr.endY = data->resy - 1;
+	if ((data->spr.startX = screen - data->spr.w / 2) < 0)
+		data->spr.startX = 0;
+	if ((data->spr.endX = screen + data->spr.w / 2) >= data->resx)
+		data->spr.endY = data->resx - 1;
 	while (++x < data->spr.endX)
 		draw_sprite(data, x, screen);
 }
@@ -301,15 +305,24 @@ void	draw_sprite(t_data *data, int x, int screen)
 
 	y = data->spr.startY - 1;
 	texX = (int)(256 * (x - (screen - data->spr.w / 2)) * TEX_W / data->spr.w) / 256;
-	if (data->spr.transY > 0 && x > 0 && x < data->resx && data->spr.transY < data->player->pwd)
+	if (data->spr.transY)
 	{
-		while (++y < data->spr.endY)
+		if (x > 0)
 		{
-			d = y * 256 - data->resy * 128 + data->spr.h * 128;
-			texY = ((d * TEX_H) / data->spr.h) / 256;
-			color = get_tex_color_sprite(data, texX, texY);
-			if (color != 0xFFFFFF)
-				my_mlx_pixel_put(&data->image, x, y, color);
+			if (x < data->resx)
+			{
+				while (++y < data->spr.endY)
+				{
+					d = y * 256 - data->resy * 128 + data->spr.h * 128;
+					texY = ((d * TEX_H) / data->spr.h) / 256;
+					color = get_tex_color_sprite(data, texX, texY);
+					if (color != 0xFFFFFF)
+					{
+						my_mlx_pixel_put(&data->image, x, y, color);
+					}
+				}
+			}
 		}
+		
 	}
 }

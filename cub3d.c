@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/09/02 17:43:41 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/02 18:01:54 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@
 
 // Tengo puestas las texturas con el path entero (podría poner ./textures pero por
 // alguna razón esto no me funciona)
+
+// Como el player->hit solo aumenta si hemos chocado con un 1, igual puede atravesar
+// sprites
 
 
 int	main(int argc, char **argv)
@@ -555,7 +558,7 @@ void	DDA(t_player *player, t_data *data)
 			player->side = 1;
 		}
 		//printf("x %d, y %d \n", player->map.x, player->map.y);
-		if (data->map[player->map.y][player->map.x] != '0')
+		if (data->map[player->map.y][player->map.x] == '1')
 			player->hit = 1;
 	}
 	//printf("hit en x = %i y = %i\n", player->map.x, player->map.y);
