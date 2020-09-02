@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/09/02 18:01:54 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/02 20:34:59 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 /* Hay que ver que lines esté bien si añado saltos de línea al final */
 /* El ft_atof está comentado porque no reconoce el pow */
 
-// Si me pasan un mapa que no existe, da segmentation fault!
+// Si me pasan un archivo .cub que no existe, da segmentation fault!
+// Lo mismo pasa con texturas y con los sprites
 
 // Hay que hacer que no llegue a pegarse del todo a la pared porque si no se buggea
 // (no se mueve porque está atrapado en una pared y detecta que está rodeado por paredes)
@@ -123,7 +124,7 @@ int		ft_floorcol(char *aux, int i, t_data *data)
 	data->floor.B = ft_atoi(aux + i);
 	while(ft_isdigit(aux[i]) || aux[i] == ' ' || aux[i] == '\n')
 		i++;
-	data->floor_col = ft_strjoin("0x", ft_strjoin(to_base(data->floor.R),
+	data->floor_col = (int)ft_strjoin("0x", ft_strjoin(to_base(data->floor.R),
 			ft_strjoin(to_base(data->floor.G), to_base(data->floor.B))));
 	return (i);
 }
@@ -141,7 +142,7 @@ int		ft_ceilcol(char *aux, int i, t_data *data)
 	i = i + count_nb(data->ceil.B);
 	while(aux[i] == '\n')
 		i++;
-	data->ceil_col = ft_strjoin("0x", ft_strjoin(to_base(data->ceil.R),
+	data->ceil_col = (int)ft_strjoin("0x", ft_strjoin(to_base(data->ceil.R),
 			ft_strjoin(to_base(data->ceil.G), to_base(data->ceil.B))));
 	return (i);
 }
@@ -482,6 +483,7 @@ void	start_raycasting(t_data *data)
 	player->cam_plane = create_dvec(0.66 * fabs(player->dir.y), 0.66 * fabs(player->dir.x)); // No estoy muy segura de esto
 	data->map[line_character(data)][col_character(data)] = '0';
 	data->player = player;
+	data->spr.buff = malloc(sizeof(double) * data->resx);
 	draw_screen(data, player);
 	mlx_hook(data->win_ptr, 2, 1L << 0, key_pressed, data);
 	mlx_hook(data->win_ptr, 3, 1L << 1, key_released, data);
@@ -564,7 +566,7 @@ void	DDA(t_player *player, t_data *data)
 	//printf("hit en x = %i y = %i\n", player->map.x, player->map.y);
 }
 
-void	fishEye(t_player *player)
+void	fishEye(t_player *player, t_data *data, int x)
 {
 	//printf("mapx %i mapy %i stepx %i stepy %i raydirx %f raydiry %f side dist_x %f side dist_y %f\n", player->map.x, player->map.y, 
 	//	player->step.x, player->step.y, player->ray_dir.x, player->ray_dir.y, player->side_dist.x, player->side_dist.y);
@@ -572,6 +574,7 @@ void	fishEye(t_player *player)
 		player->pwd = (player->map.x - player->pos.x + (1 - player->step.x) / 2) / player->ray_dir.x;
 	else
 		player->pwd = (player->map.y - player->pos.y + (1 - player->step.y) / 2) / player->ray_dir.y;
+	data->spr.buff[x] = player->pwd;
 }
 
 /* 

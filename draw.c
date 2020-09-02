@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/30 17:52:28 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/02 18:46:34 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/02 20:35:23 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	draw_screen(t_data *data, t_player *player)
 		calculations_ray(player, x, data->resx);
 		initialDDA(player);
 		DDA(player, data);
-		fishEye(player);
+		fishEye(player, data, x);
 		verLine_tex(x, data, player);
 	}
 	x = -1;
@@ -96,7 +96,7 @@ void	verLine(int x, t_data *data, t_player *player)
 		i = 0;
 		while (i < start)
 		{
-			my_mlx_pixel_put(&data->image, x, i, 0x000000);
+			my_mlx_pixel_put(&data->image, x, i, data->ceil_col);
 			i++;
 		}
 		while (i < end)
@@ -109,7 +109,7 @@ void	verLine(int x, t_data *data, t_player *player)
 		}
 		while (i < data->resy)
 		{
-			my_mlx_pixel_put(&data->image, x, i, 0x000000);
+			my_mlx_pixel_put(&data->image, x, i, data->floor_col);
 			i++;	
 		}
 }
@@ -274,23 +274,23 @@ void	transform_sprite(t_data *data, t_player *player, int i)
 		player->cam_plane.y * player->dir.x);
 	data->spr.sprX = data->spr.arr[i][1] - player->pos.x;
 	data->spr.sprY = data->spr.arr[i][2] - player->pos.y;
-	data->spr.transX = det_inv * (player->ray_dir.y * data->spr.sprX
+	data->spr.transX = det_inv * (player->dir.y * data->spr.sprX
 		- player->dir.x * data->spr.sprY);
-	data->spr.transY = det_inv * ((-1) * player->cam_plane.y * data->spr.sprX
-		+ player->cam_plane.x * data->spr.sprY);
+	data->spr.transY = det_inv * (player->cam_plane.x * data->spr.sprY
+		- player->cam_plane.y * data->spr.sprX);
 	screen = (int)((data->resx / 2) * (1 + data->spr.transX /
 		data->spr.transY));
 	data->spr.h = abs((int)(data->resy / data->spr.transY));
-	data->spr.w = abs((int)(data->resy / data->spr.transY));
 	if ((data->spr.startY = data->resy / 2 - data->spr.h / 2) < 0)
 		data->spr.startY = 0;
-	x = data->spr.startX - 1;
 	if ((data->spr.endY = data->resy / 2 + data->spr.h / 2) >= data->resy)
 		data->spr.endY = data->resy - 1;
+	data->spr.w = abs((int)(data->resy / data->spr.transY));
 	if ((data->spr.startX = screen - data->spr.w / 2) < 0)
 		data->spr.startX = 0;
 	if ((data->spr.endX = screen + data->spr.w / 2) >= data->resx)
 		data->spr.endY = data->resx - 1;
+	x = data->spr.startX - 1;
 	while (++x < data->spr.endX)
 		draw_sprite(data, x, screen);
 }
@@ -304,25 +304,16 @@ void	draw_sprite(t_data *data, int x, int screen)
 	int		color;
 
 	y = data->spr.startY - 1;
-	texX = (int)(256 * (x - (screen - data->spr.w / 2)) * TEX_W / data->spr.w) / 256;
-	if (data->spr.transY)
+	texX = (int)((x - (screen - data->spr.w / 2)) * TEX_W / data->spr.w);
+	if (data->spr.transY > 0 && x > 0 && x < data->resx && data->spr.transY < data->spr.buff[x])
 	{
-		if (x > 0)
+		while (++y < data->spr.endY)
 		{
-			if (x < data->resx)
-			{
-				while (++y < data->spr.endY)
-				{
-					d = y * 256 - data->resy * 128 + data->spr.h * 128;
-					texY = ((d * TEX_H) / data->spr.h) / 256;
-					color = get_tex_color_sprite(data, texX, texY);
-					if (color != 0xFFFFFF)
-					{
-						my_mlx_pixel_put(&data->image, x, y, color);
-					}
-				}
-			}
+			d = y * 256 - data->resy * 128 + data->spr.h * 128;
+			texY = ((d * TEX_H) / data->spr.h) / 256;
+			color = get_tex_color_sprite(data, texX, texY);
+			if (color != 0x000000)
+				my_mlx_pixel_put(&data->image, x, y, color);
 		}
-		
 	}
 }

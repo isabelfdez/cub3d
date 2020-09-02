@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/02 17:33:39 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/02 20:31:02 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ typedef	struct	s_sprite
 	int			endX;
 	int			startY;		/* Lowest (up) pixel to fill in current sripe */
 	int			endY;		/* Highest (down) pixel to fill in current stripe */
+	double		*buff;
 }				t_sprite;
 
 typedef	struct	s_player
@@ -122,8 +123,8 @@ typedef struct	s_data
 	int			resy;
 	t_col		floor;
 	t_col		ceil;
-	char		*floor_col;
-	char		*ceil_col;
+	int			floor_col;
+	int			ceil_col;
 	char		**map;
 	char		**map2;
 	int			c;		/* Number of columns in the map */
@@ -168,7 +169,7 @@ void	start_raycasting(t_data *data);
 void	calculations_ray(t_player *player, int x, int resx);
 void	initialDDA(t_player *player);
 void	DDA(t_player *player, t_data *data);
-void	fishEye(t_player *player);
+void	fishEye(t_player *player, t_data *data, int x);
 int		*draw_line(t_player *player, t_data *data);
 
 int		skip_spaces(char *str, int i);
