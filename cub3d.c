@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/09/01 19:03:43 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/02 17:43:41 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ void	ft_readfile(char *aux)
 			j = ft_easttex(aux, j + 2, data);
 		if (aux[j] == 'W' && aux[j + 1] == 'E')
 			j = ft_westtex(aux, j + 2, data);
+		if (aux[j] == 'S')
+			j = ft_sprtex(aux, j + 1, data);
 		i--;
 	}
 	/* El parámetro j va a ser donde acaben los datos y empiece el mapa */
@@ -221,6 +223,27 @@ int		ft_westtex(char *aux, int i, t_data *data)
 			data->texture[TEX_WE].texim.addr = mlx_get_data_addr
 			(data->texture[TEX_WE].texim.img, &data->texture[TEX_WE].texim.bits_per_pixel,
 			&data->texture[TEX_WE].texim.line_length, &data->texture[TEX_WE].texim.endian);
+	}
+	return (icpy);
+}
+
+int		ft_sprtex(char *aux, int i, t_data *data)
+{
+	int		icpy;
+
+	i = skip_spaces(aux, i);
+	icpy = i;
+	while (!ft_isspace(aux[icpy]))
+		icpy++;
+	if ((data->spr.tex.path = ft_getpath(aux, i, icpy)))
+	{
+		while (aux[icpy] == '\n')
+			icpy++;
+		if ((data->spr.tex.texim.img = mlx_xpm_file_to_image(data->mlx_ptr,
+			data->spr.tex.path, &data->tex_w, &data->tex_h)))
+			data->spr.tex.texim.addr = mlx_get_data_addr
+			(data->spr.tex.texim.img, &data->spr.tex.texim.bits_per_pixel,
+			&data->spr.tex.texim.line_length, &data->spr.tex.texim.endian);
 	}
 	return (icpy);
 }
@@ -457,15 +480,6 @@ void	start_raycasting(t_data *data)
 	data->map[line_character(data)][col_character(data)] = '0';
 	data->player = player;
 	draw_screen(data, player);
-	/*while (x < data->resx)
-	{
-		calculations_ray(player, x, data->resx);
-		initialDDA(player);
-		DDA(player, data);
-		fishEye(player);
-		draw_line(player, data);
-		x++;
-	}*/
 	mlx_hook(data->win_ptr, 2, 1L << 0, key_pressed, data);
 	mlx_hook(data->win_ptr, 3, 1L << 1, key_released, data);
 	mlx_hook(data->win_ptr, 17, 1L << 17, close_window, data);
@@ -557,23 +571,12 @@ void	fishEye(t_player *player)
 		player->pwd = (player->map.y - player->pos.y + (1 - player->step.y) / 2) / player->ray_dir.y;
 }
 
-/*void	draw_line(int x, t_player *player, t_data *data)
-{
-	int		line_h;
-	int		start;
-	int		end;
-
-	line_h = (int)(data->resy / player->pwd);
-	start = -line_h / 2 + data->resy / 2;
-	end = line_h / 2 + data->resy / 2;
-	//printf("%i, %i\n", start, end);
-	if (start < 0)
-		start = 0;
-	if (end > data->resy)
-		end = data->resy - 1;
-	verLine(x, start, end, data, player);
-	//printf("RAY IS OVER\n");
-}*/
+/* 
+** line_h is the height of the vertical line that should be drawn
+** it is calculated doing the inverse of the perpendicular distance to the wall
+** and then multiplying it by the height of pixels of the screen (to bring
+** it to pixel coordinates)
+*/
 
 int		*draw_line(t_player *player, t_data *data)
 {
@@ -586,11 +589,9 @@ int		*draw_line(t_player *player, t_data *data)
 	array[1] = line_h / 2 + data->resy / 2;
 	if (array[0] < 0)
 		array[0] = 0;
-	if (array[1] > data->resy)
+	if (array[1] >= data->resy)
 		array[1] = data->resy - 1;
 	return (array);
-	//verLine(x, start, end, data, player);
-	//printf("RAY IS OVER\n");
 }
 
 

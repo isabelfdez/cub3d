@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/01 20:23:33 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/02 17:33:39 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,16 @@ typedef	struct	s_sprite
 	int			num;		/* The number of sprites in the map */
 	t_tex		tex;		/* The texture of the sprite */
 	double		**arr;		/* The following data will be stored for each sprite: order, posx, posy, distance */
+	double		sprX;		/* Sprite position relative to camera */
+	double		sprY;
+	double		transX;		/* Transform sprite with the inverse camera matrix */
+	double		transY;		/* Depth inside the screen */
+	int			h;			/* Height of the sprite on the screen */
+	int			w;			/* Width of the sprite on the screen */
+	int			startX;
+	int			endX;
+	int			startY;		/* Lowest (up) pixel to fill in current sripe */
+	int			endY;		/* Highest (down) pixel to fill in current stripe */
 }				t_sprite;
 
 typedef	struct	s_player
@@ -139,6 +149,7 @@ int		ft_northtex(char *aux, int i, t_data *data);
 int		ft_southtex(char *aux, int i, t_data *data);
 int		ft_easttex(char *aux, int i, t_data *data);
 int		ft_westtex(char *aux, int i, t_data *data);
+int		ft_sprtex(char *aux, int i, t_data *data);
 
 void	allocate_map(t_data *data, int j, char *aux);
 void	fill_map(t_data *data, int jcpy[], char *aux);
@@ -192,10 +203,13 @@ void	draw_screen(t_data *data, t_player *player);
 void	verLine(int x, t_data *data, t_player *player);
 void	verLine_tex(int x, t_data *data, t_player *player);
 int		get_tex_color(t_data *data, int texX, int texY);
+int		get_tex_color_sprite(t_data *data, int texX, int texY);
 void    my_mlx_pixel_put(t_image *data, int x, int y, int color);
 int		texture_number(t_data *data);
 void	calculations_sprite(t_data *data, t_player *player);
 void	sort_sprite(t_data *data);
+void	transform_sprite(t_data *data, t_player *player, int i);
+void	draw_sprite(t_data *data, int x, int screen);
 
 int		loop_manager(void *param);
 void	key_manager(t_data *data);
