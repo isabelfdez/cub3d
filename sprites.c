@@ -6,13 +6,13 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/03 17:38:41 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/03 18:44:23 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/03 18:56:26 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	calculations_sprite(t_data *data, t_player *player)
+void	calculations_sprite(t_data *data, t_player *pyr)
 {
 	int		i;
 	int		c;
@@ -24,7 +24,7 @@ void	calculations_sprite(t_data *data, t_player *player)
 	while (++i < data->spr.num)
 		data->spr.arr[i] = malloc((sizeof(double)) * 4);
 	i = 0;
-	while (l < data->l && i < data->spr.num)
+	while (++l < data->l && i < data->spr.num)
 	{
 		c = 0;
 		while (++c < data->c && i < data->spr.num)
@@ -33,11 +33,10 @@ void	calculations_sprite(t_data *data, t_player *player)
 				data->spr.arr[i][0] = i;
 				data->spr.arr[i][1] = (double)c + 0.5;
 				data->spr.arr[i][2] = (double)l + 0.5;
-				data->spr.arr[i][3] = pow(player->pos.x - data->spr.arr[i][1], 2)
-					+ pow(player->pos.y - data->spr.arr[i][2], 2);
+				data->spr.arr[i][3] = pow(pyr->pos.x - data->spr.arr[i][1], 2)
+					+ pow(pyr->pos.y - data->spr.arr[i][2], 2);
 				i++;
 			}
-		l++;
 	}
 }
 
@@ -69,7 +68,7 @@ void	sort_sprite(t_data *data)
 /*
 ** To calculate the sprite height and width I use the same formula
 ** as when I had to calculate the line height in draw_line().
-** However, this time I use transY (which is actually the depth inside 
+** However, this time I use transY (which is actually the depth inside
 ** the screen) because it prevents fisheye
 */
 
@@ -79,22 +78,20 @@ void	transform_sprite(t_data *data, t_player *player, int i)
 	int		screen;
 	int		x;
 
-	det_inv = 1.0 / (player->cam_plane.x * player->dir.y -
-		player->cam_plane.y * player->dir.x);
+	det_inv = invdet(player);
 	data->spr.sprX = data->spr.arr[i][1] - player->pos.x;
 	data->spr.sprY = data->spr.arr[i][2] - player->pos.y;
-	data->spr.transX = det_inv * (player->dir.y * data->spr.sprX
+	data->spr.trnx = det_inv * (player->dir.y * data->spr.sprX
 		- player->dir.x * data->spr.sprY);
-	data->spr.transY = det_inv * (player->cam_plane.x * data->spr.sprY
+	data->spr.trny = det_inv * (player->cam_plane.x * data->spr.sprY
 		- player->cam_plane.y * data->spr.sprX);
-	screen = (int)((data->resx / 2) * (1 + data->spr.transX /
-		data->spr.transY));
-	data->spr.h = abs((int)(data->resy / data->spr.transY));
+	screen = (int)((data->resx / 2) * (1 + data->spr.trnx / data->spr.trny));
+	data->spr.h = abs((int)(data->resy / data->spr.trny));
 	if ((data->spr.startY = data->resy / 2 - data->spr.h / 2) < 0)
 		data->spr.startY = 0;
 	if ((data->spr.endY = data->resy / 2 + data->spr.h / 2) >= data->resy)
 		data->spr.endY = data->resy - 1;
-	data->spr.w = abs((int)(data->resy / data->spr.transY));
+	data->spr.w = abs((int)(data->resy / data->spr.trny));
 	if ((data->spr.startX = screen - data->spr.w / 2) < 0)
 		data->spr.startX = 0;
 	if ((data->spr.endX = screen + data->spr.w / 2) >= data->resx)
@@ -107,34 +104,35 @@ void	transform_sprite(t_data *data, t_player *player, int i)
 void	draw_sprite(t_data *data, int x, int screen)
 {
 	int		y;
-	int		texX;
-	int		texY;
+	int		texx;
+	int		texy;
 	int		d;
 	int		color;
 
 	y = data->spr.startY - 1;
-	texX = (int)((x - (screen - data->spr.w / 2)) * TEX_W / data->spr.w);
-	if (data->spr.transY > 0 && x > 0 && x < data->resx && data->spr.transY < data->spr.buff[x])
+	texx = (int)((x - (screen - data->spr.w / 2)) * TEX_W / data->spr.w);
+	if (data->spr.trny > 0 && x > 0 && x < data->resx && data->spr.trny
+		< data->spr.buff[x])
 	{
 		while (++y < data->spr.endY)
 		{
 			d = y * 256 - data->resy * 128 + data->spr.h * 128;
-			texY = ((d * TEX_H) / data->spr.h) / 256;
-			color = get_tex_color_sprite(data, texX, texY);
+			texy = ((d * TEX_H) / data->spr.h) / 256;
+			color = get_tex_color_sprite(data, texx, texy);
 			if (color != 0x000000)
 				my_mlx_pixel_put(&data->image, x, y, color);
 		}
 	}
 }
 
-int		get_tex_color_sprite(t_data *data, int texX, int texY)
+int		get_tex_color_sprite(t_data *data, int texx, int texy)
 {
-	if (texX >= 0 && texX < data->tex_w
-		&& texY >= 0 && texY < data->tex_h)
-		{
-			return (*(int *)(data->spr.tex.texim.addr
-				+ (4 * data->tex_w * texY)
-				+ (4 * texX)));
-		}
+	if (texx >= 0 && texx < data->tex_w
+		&& texy >= 0 && texy < data->tex_h)
+	{
+		return (*(int *)(data->spr.tex.texim.addr
+			+ (4 * data->tex_w * texy)
+			+ (4 * texx)));
+	}
 	return (0x0);
 }

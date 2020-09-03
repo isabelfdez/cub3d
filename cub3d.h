@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/03 18:38:36 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/03 18:59:30 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,8 @@ typedef	struct	s_sprite
 	double		**arr;		/* The following data will be stored for each sprite: order, posx, posy, distance */
 	double		sprX;		/* Sprite position relative to camera */
 	double		sprY;
-	double		transX;		/* Transform sprite with the inverse camera matrix */
-	double		transY;		/* Depth inside the screen */
+	double		trnx;		/* Transform sprite with the inverse camera matrix */
+	double		trny;		/* Depth inside the screen */
 	int			h;			/* Height of the sprite on the screen */
 	int			w;			/* Width of the sprite on the screen */
 	int			startX;
@@ -184,7 +184,6 @@ void	set_zeros(int *n, int l);
 void	set_ones(int *n, char *str);
 int		adjacent_ones(int *n, int j, int len);
 int		adjacent_ones2(char **map, int l, int i);
-void	adjacent_spa(t_data *data, int l, int c);
 int		deg_vtx(t_data *data, int l, int c);
 void	check_one(t_data *data, int l, int c);
 int		find_ones(t_data *data);
@@ -193,7 +192,6 @@ int		col_character(t_data *data);
 t_dvector	create_dvec(double i, double j);
 t_ivector	create_ivec(int i, int j);
 void	initialize_keys(t_data *data);
-void	print_map(t_data *data);
 int		find_key_pressed(t_data *data);
 int		nb_sign(int a);
 char	*ft_getpath(char *aux, int i, int icpy);
@@ -201,6 +199,7 @@ char	*to_base(unsigned int nb);
 void	count_sprites(t_data *data);
 char	check_order(t_data *data);
 int		number_base(char *str);
+double	invdet(t_player *player);
 
 void	openwindow(t_data *data);
 void	draw_screen(t_data *data, t_player *player);
