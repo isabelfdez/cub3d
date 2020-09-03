@@ -6,28 +6,22 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/09/02 20:34:59 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/03 18:19:39 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
 /* Hay que ver que lines esté bien si añado saltos de línea al final */
-/* El ft_atof está comentado porque no reconoce el pow */
-
-// Si me pasan un archivo .cub que no existe, da segmentation fault!
-// Lo mismo pasa con texturas y con los sprites
 
 // Hay que hacer que no llegue a pegarse del todo a la pared porque si no se buggea
 // (no se mueve porque está atrapado en una pared y detecta que está rodeado por paredes)
 // Esto lo he intentado arreglar poniendo lo de 0.2 * nb_sign(player->dir.x) pero está mal
 
-
-// Tengo puestas las texturas con el path entero (podría poner ./textures pero por
-// alguna razón esto no me funciona)
-
 // Como el player->hit solo aumenta si hemos chocado con un 1, igual puede atravesar
 // sprites
+
+// Si no le paso todos los datos que tiene que tener también da seg fault
 
 
 int	main(int argc, char **argv)
@@ -44,7 +38,11 @@ int	main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 	file = argv[1];
-	fd = open(file, O_RDONLY);
+	if ((fd = open(file, O_RDONLY)) == -1)
+	{
+		ft_putstr_fd("Error\n.cub file doesn't exist", 2);
+		exit(EXIT_FAILURE);
+	}
 	while (get_next_line(fd, &str))
 	{
 		if (!aux)
@@ -108,7 +106,6 @@ int		ft_resolution(char *aux, int i, t_data *data)
 	data->resy = ft_atoi(aux + i);
 	while(ft_isdigit(aux[i]) || aux[i] == ' ' || aux[i] == '\n')
 		i++;
-	//printf("resx = %i, resy = %i\n", data->resx, data->resy);
 	return (i);
 }
 
@@ -124,8 +121,9 @@ int		ft_floorcol(char *aux, int i, t_data *data)
 	data->floor.B = ft_atoi(aux + i);
 	while(ft_isdigit(aux[i]) || aux[i] == ' ' || aux[i] == '\n')
 		i++;
-	data->floor_col = (int)ft_strjoin("0x", ft_strjoin(to_base(data->floor.R),
-			ft_strjoin(to_base(data->floor.G), to_base(data->floor.B))));
+	data->floor_col = ft_strjoin(to_base(data->floor.R),
+			ft_strjoin(to_base(data->floor.G), to_base(data->floor.B)));
+	data->f_c = number_base(data->floor_col);
 	return (i);
 }
 
@@ -142,8 +140,9 @@ int		ft_ceilcol(char *aux, int i, t_data *data)
 	i = i + count_nb(data->ceil.B);
 	while(aux[i] == '\n')
 		i++;
-	data->ceil_col = (int)ft_strjoin("0x", ft_strjoin(to_base(data->ceil.R),
-			ft_strjoin(to_base(data->ceil.G), to_base(data->ceil.B))));
+	data->ceil_col = ft_strjoin(to_base(data->ceil.R),
+			ft_strjoin(to_base(data->ceil.G), to_base(data->ceil.B)));
+	data->c_c = number_base(data->ceil_col);
 	return (i);
 }
 
@@ -164,6 +163,11 @@ int		ft_northtex(char *aux, int i, t_data *data)
 			data->texture[TEX_N].texim.addr = mlx_get_data_addr
 			(data->texture[TEX_N].texim.img, &data->texture[TEX_N].texim.bits_per_pixel,
 			&data->texture[TEX_N].texim.line_length, &data->texture[TEX_N].texim.endian);
+		else
+		{
+			ft_putstr_fd("Error\nInvalid north texture", 2);
+			exit(EXIT_FAILURE);
+		}
 	}
 	return (icpy);
 }
@@ -185,6 +189,11 @@ int		ft_southtex(char *aux, int i, t_data *data)
 			data->texture[TEX_S].texim.addr = mlx_get_data_addr
 			(data->texture[TEX_S].texim.img, &data->texture[TEX_S].texim.bits_per_pixel,
 			&data->texture[TEX_S].texim.line_length, &data->texture[TEX_S].texim.endian);
+		else
+		{
+			ft_putstr_fd("Error\nInvalid south texture", 2);
+			exit(EXIT_FAILURE);
+		}
 	}
 	return (icpy);
 }
@@ -206,6 +215,11 @@ int		ft_easttex(char *aux, int i, t_data *data)
 			data->texture[TEX_E].texim.addr = mlx_get_data_addr
 			(data->texture[TEX_E].texim.img, &data->texture[TEX_E].texim.bits_per_pixel,
 			&data->texture[TEX_E].texim.line_length, &data->texture[TEX_E].texim.endian);
+		else
+		{
+			ft_putstr_fd("Error\nInvalid east texture", 2);
+			exit(EXIT_FAILURE);
+		}
 	}
 	return (icpy);
 }
@@ -227,6 +241,11 @@ int		ft_westtex(char *aux, int i, t_data *data)
 			data->texture[TEX_WE].texim.addr = mlx_get_data_addr
 			(data->texture[TEX_WE].texim.img, &data->texture[TEX_WE].texim.bits_per_pixel,
 			&data->texture[TEX_WE].texim.line_length, &data->texture[TEX_WE].texim.endian);
+		else
+		{
+			ft_putstr_fd("Error\nInvalid west texture", 2);
+			exit(EXIT_FAILURE);
+		}
 	}
 	return (icpy);
 }
@@ -248,6 +267,11 @@ int		ft_sprtex(char *aux, int i, t_data *data)
 			data->spr.tex.texim.addr = mlx_get_data_addr
 			(data->spr.tex.texim.img, &data->spr.tex.texim.bits_per_pixel,
 			&data->spr.tex.texim.line_length, &data->spr.tex.texim.endian);
+		else
+		{
+			ft_putstr_fd("Error\nInvalid sprite texture", 2);
+			exit(EXIT_FAILURE);
+		}
 	}
 	return (icpy);
 }
@@ -264,7 +288,7 @@ void	allocate_map(t_data *data, int j, char *aux)
 	while (aux[jcpy[1]] == ' ' || ft_isalnum(aux[jcpy[1]]))
 		jcpy[1]++;
 	/* Aquí habría que probar qué pasa si las letras del mapa está mal
-	¿Reserva el espacio correcto? ¿Puede sar seg fault? */
+	¿Reserva el espacio correcto? ¿Puede dar seg fault? */
 	data->c = jcpy[1] - j;
 	data->map = (char **)malloc(sizeof(char *) * (lines + 1));
 	data->map2 = (char **)malloc(sizeof(char *) * (lines + 1));
@@ -467,7 +491,7 @@ void	start_raycasting(t_data *data)
 	int			x;
 
 	x = 0;
-	openWindow(data);
+	openwindow(data);
 	if (!(player = malloc(sizeof(t_player))))
 		return ;
 	player->pos.x = col_character(data) + 0.5;

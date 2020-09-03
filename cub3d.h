@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/02 20:31:02 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/03 18:38:36 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,10 @@ typedef struct	s_data
 	int			resy;
 	t_col		floor;
 	t_col		ceil;
-	int			floor_col;
-	int			ceil_col;
+	char		*floor_col;
+	int			f_c;
+	char		*ceil_col;
+	int			c_c;
 	char		**map;
 	char		**map2;
 	int			c;		/* Number of columns in the map */
@@ -198,19 +200,22 @@ char	*ft_getpath(char *aux, int i, int icpy);
 char	*to_base(unsigned int nb);
 void	count_sprites(t_data *data);
 char	check_order(t_data *data);
+int		number_base(char *str);
 
-void	openWindow(t_data *data);
+void	openwindow(t_data *data);
 void	draw_screen(t_data *data, t_player *player);
-void	verLine(int x, t_data *data, t_player *player);
-void	verLine_tex(int x, t_data *data, t_player *player);
-int		get_tex_color(t_data *data, int texX, int texY);
-int		get_tex_color_sprite(t_data *data, int texX, int texY);
 void    my_mlx_pixel_put(t_image *data, int x, int y, int color);
+
+void	verline_tex(int x, t_data *data, t_player *player);
+int		get_tex_color(t_data *data, int texX, int texY);
 int		texture_number(t_data *data);
+void    draw_textures(t_data *data, int *arr, int tex[], double pos[]);
+
 void	calculations_sprite(t_data *data, t_player *player);
 void	sort_sprite(t_data *data);
 void	transform_sprite(t_data *data, t_player *player, int i);
 void	draw_sprite(t_data *data, int x, int screen);
+int		get_tex_color_sprite(t_data *data, int texX, int texY);
 
 int		loop_manager(void *param);
 void	key_manager(t_data *data);

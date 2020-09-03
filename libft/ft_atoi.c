@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/15 17:19:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/06/27 13:36:32 by marvin           ###   ########.fr       */
+/*   Updated: 2020/09/03 17:02:20 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int		ft_atoi(const char *str)
 ** This function converts a string to a float
 */
 
-/*float		ft_atof(const char *aux, int i)
+float		ft_atof(const char *aux, int i)
 {
 	float	nb;
 
@@ -57,4 +57,4 @@ int		ft_atoi(const char *str)
 		nb = nb - ((ft_atoi(aux + i + 1)) /
 		(pow(10.0, count_nb(ft_atoi(aux + i + 1)))));
 	return (nb);
-}*/
+}

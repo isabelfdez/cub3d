@@ -1,15 +1,15 @@
 R   1920 1080
 
-NO  /Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/bluestone.xpm
-SO /Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/eagle.xpm
-EA  /Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/wall_1.xpm
-WE   /Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/wall_2.xpm
+NO  ./textures/bluestone.xpm
+SO ./textures/eagle.xpm
+EA  ./textures/wall_1.xpm
+WE   ./textures/wall_2.xpm
 
 
-S /Users/isfernan/42cursus/cub3d/cub3d_prueba_editado/cub3d_fake/textures/sprite_1.xpm
+S ./textures/sprite_1.xpm
 
-F   220,  100,0
-C 225,30  ,3
+F   0,  100,40
+C 0,30  ,100
 
 
         1111111111111111111111111

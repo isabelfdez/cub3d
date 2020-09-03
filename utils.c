@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 20:15:19 by aserrano          #+#    #+#             */
-/*   Updated: 2020/09/01 20:15:39 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/03 16:15:55 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -391,4 +391,21 @@ char	check_order(t_data *data)
 		i++;
 	}
 	return (flag);
+}
+
+int		number_base(char *str)
+{
+	int		nb;
+	int		i;
+
+	nb = 0;
+	i = -1;
+	while (++i < 6)
+	{
+		if (ft_isdigit(str[i]))
+			nb = nb + pow(16, 5 - i) * (str[i] - '0');
+		else
+			nb = nb + pow(16, 5 - i) * (str[i] - 'A' + 10);
+	}
+	return (nb);
 }

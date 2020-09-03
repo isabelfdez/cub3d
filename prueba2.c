@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/02 16:55:35 by isfernan          #+#    #+#             */
-/*   Updated: 2020/08/31 19:43:06 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/03 17:13:47 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,17 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <math.h>
 
 int main()
 {
-	double	x = 7.5;
-	double y = 1.2;
+	void	*mlx;
+	char	*path = "./hola.xpm";
+	int		w = 64;
+	int		h = 64;
+	void	*img;
 
-	printf("%f", x / y);
-	return (0);
+	mlx = mlx_init();
+	img = mlx_xpm_file_to_image(mlx, path, &w, &h);
+	printf("%s", img);
 }
