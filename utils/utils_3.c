@@ -6,15 +6,15 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/03 19:07:45 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/03 19:08:49 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/04 16:24:37 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "utils.h"
 
 /*
 ** This function returns the degree of a vertex in a graph (map)
-** where 1 means it is connected to another vertex 
+** where 1 means it is connected to another vertex
 */
 
 int		deg_vtx(t_data *data, int l, int c)

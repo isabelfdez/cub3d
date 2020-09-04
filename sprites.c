@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/03 17:38:41 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/03 18:56:26 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/04 16:57:22 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,25 +79,25 @@ void	transform_sprite(t_data *data, t_player *player, int i)
 	int		x;
 
 	det_inv = invdet(player);
-	data->spr.sprX = data->spr.arr[i][1] - player->pos.x;
-	data->spr.sprY = data->spr.arr[i][2] - player->pos.y;
-	data->spr.trnx = det_inv * (player->dir.y * data->spr.sprX
-		- player->dir.x * data->spr.sprY);
-	data->spr.trny = det_inv * (player->cam_plane.x * data->spr.sprY
-		- player->cam_plane.y * data->spr.sprX);
+	data->spr.sprx = data->spr.arr[i][1] - player->pos.x;
+	data->spr.spry = data->spr.arr[i][2] - player->pos.y;
+	data->spr.trnx = det_inv * (player->dir.y * data->spr.sprx
+		- player->dir.x * data->spr.spry);
+	data->spr.trny = det_inv * (player->cam_plane.x * data->spr.spry
+		- player->cam_plane.y * data->spr.sprx);
 	screen = (int)((data->resx / 2) * (1 + data->spr.trnx / data->spr.trny));
 	data->spr.h = abs((int)(data->resy / data->spr.trny));
-	if ((data->spr.startY = data->resy / 2 - data->spr.h / 2) < 0)
-		data->spr.startY = 0;
-	if ((data->spr.endY = data->resy / 2 + data->spr.h / 2) >= data->resy)
-		data->spr.endY = data->resy - 1;
+	if ((data->spr.start_y = data->resy / 2 - data->spr.h / 2) < 0)
+		data->spr.start_y = 0;
+	if ((data->spr.end_y = data->resy / 2 + data->spr.h / 2) >= data->resy)
+		data->spr.end_y = data->resy - 1;
 	data->spr.w = abs((int)(data->resy / data->spr.trny));
-	if ((data->spr.startX = screen - data->spr.w / 2) < 0)
-		data->spr.startX = 0;
-	if ((data->spr.endX = screen + data->spr.w / 2) >= data->resx)
-		data->spr.endY = data->resx - 1;
-	x = data->spr.startX - 1;
-	while (++x < data->spr.endX)
+	if ((data->spr.start_x = screen - data->spr.w / 2) < 0)
+		data->spr.start_x = 0;
+	if ((data->spr.end_x = screen + data->spr.w / 2) >= data->resx)
+		data->spr.end_y = data->resx - 1;
+	x = data->spr.start_x - 1;
+	while (++x < data->spr.end_x)
 		draw_sprite(data, x, screen);
 }
 
@@ -109,12 +109,12 @@ void	draw_sprite(t_data *data, int x, int screen)
 	int		d;
 	int		color;
 
-	y = data->spr.startY - 1;
+	y = data->spr.start_y - 1;
 	texx = (int)((x - (screen - data->spr.w / 2)) * TEX_W / data->spr.w);
 	if (data->spr.trny > 0 && x > 0 && x < data->resx && data->spr.trny
 		< data->spr.buff[x])
 	{
-		while (++y < data->spr.endY)
+		while (++y < data->spr.end_y)
 		{
 			d = y * 256 - data->resy * 128 + data->spr.h * 128;
 			texy = ((d * TEX_H) / data->spr.h) / 256;

@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/09/03 18:19:39 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/04 20:01:40 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,6 @@
 
 // Como el player->hit solo aumenta si hemos chocado con un 1, igual puede atravesar
 // sprites
-
-// Si no le paso todos los datos que tiene que tener también da seg fault
-
 
 int	main(int argc, char **argv)
 {
@@ -71,6 +68,7 @@ void	ft_readfile(char *aux)
 		return ; /* Aquí hay que ver qué hacemos */
 	data->tex_w = TEX_W;
 	data->tex_h = TEX_H;
+	initialize_keys(data);
 	data->mlx_ptr = mlx_init();
 	while (i > 0) /* Si uno de los parámetros no está, no sale de aquí */
 	{
@@ -88,10 +86,12 @@ void	ft_readfile(char *aux)
 			j = ft_easttex(aux, j + 2, data);
 		if (aux[j] == 'W' && aux[j + 1] == 'E')
 			j = ft_westtex(aux, j + 2, data);
-		if (aux[j] == 'S')
+		if (aux[j] == 'S' && aux[j + 1] != 'O')
 			j = ft_sprtex(aux, j + 1, data);
 		i--;
 	}
+	if (data->info != 8)
+		exit_program_data(data, 1);
 	/* El parámetro j va a ser donde acaben los datos y empiece el mapa */
 	allocate_map(data, j, aux);
 }
@@ -106,43 +106,48 @@ int		ft_resolution(char *aux, int i, t_data *data)
 	data->resy = ft_atoi(aux + i);
 	while(ft_isdigit(aux[i]) || aux[i] == ' ' || aux[i] == '\n')
 		i++;
+	data->info++;
 	return (i);
 }
 
 int		ft_floorcol(char *aux, int i, t_data *data)
 {
 	i = skip_spaces(aux, i);
-	data->floor.R = ft_atoi(aux + i);
-	i = i + count_nb(data->floor.R);
+	data->floor.r = ft_atoi(aux + i);
+	i = i + count_nb(data->floor.r);
 	i = skip_spa_com(aux, i);
-	data->floor.G = ft_atoi(aux + i);
-	i = i + count_nb(data->floor.G);
+	data->floor.g = ft_atoi(aux + i);
+	i = i + count_nb(data->floor.g);
 	i = skip_spa_com(aux, i);
-	data->floor.B = ft_atoi(aux + i);
+	data->floor.b = ft_atoi(aux + i);
 	while(ft_isdigit(aux[i]) || aux[i] == ' ' || aux[i] == '\n')
 		i++;
-	data->floor_col = ft_strjoin(to_base(data->floor.R),
-			ft_strjoin(to_base(data->floor.G), to_base(data->floor.B)));
+	data->floor_col = ft_strjoin(to_base(data->floor.r),
+			ft_strjoin(to_base(data->floor.g), to_base(data->floor.b)));
 	data->f_c = number_base(data->floor_col);
+	data->info++;
 	return (i);
 }
 
 int		ft_ceilcol(char *aux, int i, t_data *data)
 {
 	i = skip_spaces(aux, i);
-	data->ceil.R = ft_atoi(aux + i);
-	i = i + count_nb(data->ceil.R);
+	data->ceil.r = ft_atoi(aux + i);
+	i = i + count_nb(data->ceil.r);
 	i = skip_spa_com(aux, i);
-	data->ceil.G = ft_atoi(aux + i);
-	i = i + count_nb(data->ceil.G);
+	data->ceil.g = ft_atoi(aux + i);
+	i = i + count_nb(data->ceil.g);
 	i = skip_spa_com(aux, i);
-	data->ceil.B = ft_atoi(aux + i);
-	i = i + count_nb(data->ceil.B);
+	data->ceil.b = ft_atoi(aux + i);
+	i = i + count_nb(data->ceil.b);
 	while(aux[i] == '\n')
 		i++;
-	data->ceil_col = ft_strjoin(to_base(data->ceil.R),
-			ft_strjoin(to_base(data->ceil.G), to_base(data->ceil.B)));
+	data->ceil_col = ft_strjoin(to_base(data->ceil.r),
+			ft_strjoin(to_base(data->ceil.g), to_base(data->ceil.b)));
 	data->c_c = number_base(data->ceil_col);
+	data->info++;
+	if (!(check_colors(data)))
+		exit_program_data(data, 2);
 	return (i);
 }
 
@@ -164,11 +169,9 @@ int		ft_northtex(char *aux, int i, t_data *data)
 			(data->texture[TEX_N].texim.img, &data->texture[TEX_N].texim.bits_per_pixel,
 			&data->texture[TEX_N].texim.line_length, &data->texture[TEX_N].texim.endian);
 		else
-		{
-			ft_putstr_fd("Error\nInvalid north texture", 2);
-			exit(EXIT_FAILURE);
-		}
+			exit_program_data(data, 3);
 	}
+	data->info++;
 	return (icpy);
 }
 
@@ -190,11 +193,9 @@ int		ft_southtex(char *aux, int i, t_data *data)
 			(data->texture[TEX_S].texim.img, &data->texture[TEX_S].texim.bits_per_pixel,
 			&data->texture[TEX_S].texim.line_length, &data->texture[TEX_S].texim.endian);
 		else
-		{
-			ft_putstr_fd("Error\nInvalid south texture", 2);
-			exit(EXIT_FAILURE);
-		}
+			exit_program_data(data, 3);
 	}
+	data->info++;
 	return (icpy);
 }
 
@@ -216,11 +217,9 @@ int		ft_easttex(char *aux, int i, t_data *data)
 			(data->texture[TEX_E].texim.img, &data->texture[TEX_E].texim.bits_per_pixel,
 			&data->texture[TEX_E].texim.line_length, &data->texture[TEX_E].texim.endian);
 		else
-		{
-			ft_putstr_fd("Error\nInvalid east texture", 2);
-			exit(EXIT_FAILURE);
-		}
+			exit_program_data(data, 3);
 	}
+	data->info++;
 	return (icpy);
 }
 
@@ -242,11 +241,9 @@ int		ft_westtex(char *aux, int i, t_data *data)
 			(data->texture[TEX_WE].texim.img, &data->texture[TEX_WE].texim.bits_per_pixel,
 			&data->texture[TEX_WE].texim.line_length, &data->texture[TEX_WE].texim.endian);
 		else
-		{
-			ft_putstr_fd("Error\nInvalid west texture", 2);
-			exit(EXIT_FAILURE);
-		}
+			exit_program_data(data, 3);
 	}
+	data->info++;
 	return (icpy);
 }
 
@@ -268,11 +265,9 @@ int		ft_sprtex(char *aux, int i, t_data *data)
 			(data->spr.tex.texim.img, &data->spr.tex.texim.bits_per_pixel,
 			&data->spr.tex.texim.line_length, &data->spr.tex.texim.endian);
 		else
-		{
-			ft_putstr_fd("Error\nInvalid sprite texture", 2);
-			exit(EXIT_FAILURE);
-		}
+			exit_program_data(data, 4);
 	}
+	data->info++;
 	return (icpy);
 }
 
@@ -324,8 +319,6 @@ void	fill_map(t_data *data, int jcpy[], char *aux)
 		l++;
 	}
 	free(aux);
-	initialize_keys(data);
-	//print_map(data);
 	alter_map(data);
 	check_map_content(data);
 	map_graph(data);
@@ -518,9 +511,9 @@ void	start_raycasting(t_data *data)
 
 void	calculations_ray(t_player *player, int x, int resx)
 {
-	player->cameraX = 2 * x / (double)resx - 1;
-	player->ray_dir.x = player->dir.x + player->cam_plane.x * player->cameraX;
-	player->ray_dir.y = player->dir.y + player->cam_plane.y * player->cameraX;
+	player->camerax = 2 * x / (double)resx - 1;
+	player->ray_dir.x = player->dir.x + player->cam_plane.x * player->camerax;
+	player->ray_dir.y = player->dir.y + player->cam_plane.y * player->camerax;
 	player->map.x = (int)player->pos.x;
 	player->map.y = (int)player->pos.y;
 	player->delta_dist.x = sqrt(1 + (pow(player->ray_dir.y, 2) / pow(player->ray_dir.x, 2)));
@@ -542,7 +535,7 @@ void	calculations_ray(t_player *player, int x, int resx)
 ** stored in step.x and step.y. Those variables are always either -1 or +1.
 */
 
-void	initialDDA(t_player *player)
+void	initial_dda(t_player *player)
 {
 	if (player->ray_dir.x < 0)
 	{
@@ -566,11 +559,10 @@ void	initialDDA(t_player *player)
 	}
 }
 
-void	DDA(t_player *player, t_data *data)
+void	dda(t_player *player, t_data *data)
 {
 	while (player->hit == 0)
 	{
-		//printf("mapx %i mapy %i stepx %i stepy %i\n", player->map.x, player->map.y, player->step.x, player->step.y);
 		if (player->side_dist.x <= player->side_dist.y)
 		{
 			player->side_dist.x += player->delta_dist.x;
@@ -583,17 +575,13 @@ void	DDA(t_player *player, t_data *data)
 			player->map.y += player->step.y;
 			player->side = 1;
 		}
-		//printf("x %d, y %d \n", player->map.x, player->map.y);
 		if (data->map[player->map.y][player->map.x] == '1')
 			player->hit = 1;
 	}
-	//printf("hit en x = %i y = %i\n", player->map.x, player->map.y);
 }
 
-void	fishEye(t_player *player, t_data *data, int x)
+void	fish_eye(t_player *player, t_data *data, int x)
 {
-	//printf("mapx %i mapy %i stepx %i stepy %i raydirx %f raydiry %f side dist_x %f side dist_y %f\n", player->map.x, player->map.y, 
-	//	player->step.x, player->step.y, player->ray_dir.x, player->ray_dir.y, player->side_dist.x, player->side_dist.y);
 	if (player->side == 0)
 		player->pwd = (player->map.x - player->pos.x + (1 - player->step.x) / 2) / player->ray_dir.x;
 	else

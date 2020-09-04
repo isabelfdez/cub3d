@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/30 17:52:28 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/03 17:54:06 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/04 18:57:11 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ void	draw_screen(t_data *data, t_player *player)
 	while (++x < data->resx)
 	{
 		calculations_ray(player, x, data->resx);
-		initialDDA(player);
-		DDA(player, data);
-		fishEye(player, data, x);
+		initial_dda(player);
+		dda(player, data);
+		fish_eye(player, data, x);
 		verline_tex(x, data, player);
 	}
 	x = -1;

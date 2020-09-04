@@ -6,11 +6,11 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/03 19:06:47 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/03 19:07:53 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/04 16:22:19 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "utils.h"
 
 int		find_camera(t_data *data, int l)
 {

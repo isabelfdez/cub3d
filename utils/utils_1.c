@@ -6,11 +6,11 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 20:15:19 by aserrano          #+#    #+#             */
-/*   Updated: 2020/09/03 19:07:17 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/04 16:24:15 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "utils.h"
 
 int		skip_spaces(char *str, int i)
 {
@@ -26,8 +26,10 @@ int		skip_spa_com(char *str, int i)
 	return (i);
 }
 
-/* This function counts the amount of c-characters
-** that appear in str starting the count from index j */
+/*
+** This function counts the amount of c-characters
+** that appear in str starting the count from index j
+*/
 
 int		count_from(char c, char *str, int j)
 {
