@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/03 17:38:00 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/03 18:42:59 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/07 20:24:48 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	verline_tex(int x, t_data *data, t_player *player)
 	pos[1] = (double)TEX_H / line_h;
 	pos[0] = (arr[0] - data->resy / 2 + line_h / 2) * pos[1];
 	draw_textures(data, arr, tex, pos);
+	free(arr);
 }
 
 void	draw_textures(t_data *data, int *arr, int tex[], double pos[])

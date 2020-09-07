@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/09/04 20:01:40 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/07 20:38:54 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,10 @@ int	main(int argc, char **argv)
 	while (get_next_line(fd, &str))
 	{
 		if (!aux)
+		{
 			aux = ft_strdup(str);
+			free(str);
+		}
 		else
 		{
 			aux2 = ft_strjoin(aux, str);
@@ -51,6 +54,7 @@ int	main(int argc, char **argv)
 			aux = ft_strjoin(aux2, "\n");
 			//aux = ft_strdup(aux2); 
 			free(aux2);
+			free(str);
 		}
 	}
 	ft_readfile(aux);
@@ -112,6 +116,11 @@ int		ft_resolution(char *aux, int i, t_data *data)
 
 int		ft_floorcol(char *aux, int i, t_data *data)
 {
+	char	*str1;
+	char	*str2;
+	char	*str3;
+	char	*str4;
+
 	i = skip_spaces(aux, i);
 	data->floor.r = ft_atoi(aux + i);
 	i = i + count_nb(data->floor.r);
@@ -122,15 +131,25 @@ int		ft_floorcol(char *aux, int i, t_data *data)
 	data->floor.b = ft_atoi(aux + i);
 	while(ft_isdigit(aux[i]) || aux[i] == ' ' || aux[i] == '\n')
 		i++;
-	data->floor_col = ft_strjoin(to_base(data->floor.r),
-			ft_strjoin(to_base(data->floor.g), to_base(data->floor.b)));
+	data->floor_col = ft_strjoin((str1 = to_base(data->floor.r)),
+			(str4 = ft_strjoin((str2 = to_base(data->floor.g)), (str3 = to_base(data->floor.b)))));
 	data->f_c = number_base(data->floor_col);
+	free(str1);
+	free(str2);
+	free(str3);
+	free(str4);
 	data->info++;
+	
 	return (i);
 }
 
 int		ft_ceilcol(char *aux, int i, t_data *data)
 {
+	char	*str1;
+	char	*str2;
+	char	*str3;
+	char	*str4;
+
 	i = skip_spaces(aux, i);
 	data->ceil.r = ft_atoi(aux + i);
 	i = i + count_nb(data->ceil.r);
@@ -142,10 +161,14 @@ int		ft_ceilcol(char *aux, int i, t_data *data)
 	i = i + count_nb(data->ceil.b);
 	while(aux[i] == '\n')
 		i++;
-	data->ceil_col = ft_strjoin(to_base(data->ceil.r),
-			ft_strjoin(to_base(data->ceil.g), to_base(data->ceil.b)));
+	data->ceil_col = ft_strjoin((str1 = to_base(data->ceil.r)),
+			(str2 = ft_strjoin((str4 = to_base(data->ceil.g)), (str3 = to_base(data->ceil.b)))));
 	data->c_c = number_base(data->ceil_col);
 	data->info++;
+	free(str1);
+	free(str2);
+	free(str3);
+	free(str4);
 	if (!(check_colors(data)))
 		exit_program_data(data, 2);
 	return (i);
@@ -724,7 +747,10 @@ void	key_manager(t_data *data)
 	if (data->key.arrow_left == 1)
 		rotate_left(data);
 	if (find_key_pressed(data))
+	{
+		system("leaks cub3D");
 		draw_screen(data, data->player);
+	}
 }
 
 void	move_towards(t_data *data)
@@ -759,6 +785,7 @@ void	move_backwards(t_data *data)
 	y = player->pos.y - M_SPEED2 * player->dir.y;
 	if (x < data->c && y < data->l && data->map[y][x] == '0')
 		data->player->pos.y -= M_SPEED2 * player->dir.y;
+	system("leaks cub3D");
 }
 
 void	move_right(t_data *data)
