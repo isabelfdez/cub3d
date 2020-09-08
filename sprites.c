@@ -6,23 +6,24 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/03 17:38:41 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/07 20:35:07 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/08 17:33:04 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	calculations_sprite(t_data *data, t_player *pyr)
+double	**calculations_sprite(t_data *data, t_player *pyr)
 {
 	int		i;
 	int		c;
 	int		l;
+	double	**arr;
 
 	i = -1;
 	l = 0;
-	data->spr.arr = malloc(sizeof(double *) * data->spr.num);
+	arr = (double **)malloc(sizeof(double *) * data->spr.num);
 	while (++i < data->spr.num)
-		data->spr.arr[i] = malloc((sizeof(double)) * 4);
+		arr[i] = (double *) malloc((sizeof(double)) * 4);
 	i = 0;
 	while (++l < data->l && i < data->spr.num)
 	{
@@ -30,17 +31,18 @@ void	calculations_sprite(t_data *data, t_player *pyr)
 		while (++c < data->c && i < data->spr.num)
 			if (data->map[l][c] == '2')
 			{
-				data->spr.arr[i][0] = i;
-				data->spr.arr[i][1] = (double)c + 0.5;
-				data->spr.arr[i][2] = (double)l + 0.5;
-				data->spr.arr[i][3] = pow(pyr->pos.x - data->spr.arr[i][1], 2)
-					+ pow(pyr->pos.y - data->spr.arr[i][2], 2);
+				arr[i][0] = i;
+				arr[i][1] = (double)c + 0.5;
+				arr[i][2] = (double)l + 0.5;
+				arr[i][3] = pow(pyr->pos.x - arr[i][1], 2)
+					+ pow(pyr->pos.y - arr[i][2], 2);
 				i++;
 			}
 	}
+	return (arr);
 }
 
-void	sort_sprite(t_data *data)
+void	sort_sprite(t_data *data, double **arr)
 {
 	char	flag;
 	int		i;
@@ -53,15 +55,15 @@ void	sort_sprite(t_data *data)
 		i = 0;
 		while (i < data->spr.num - 1)
 		{
-			if (data->spr.arr[i][3] < data->spr.arr[i + 1][3])
+			if (arr[i][3] < arr[i + 1][3])
 			{
-				aux = data->spr.arr[i];
-				data->spr.arr[i] = data->spr.arr[i + 1];
-				data->spr.arr[i + 1] = aux;
+				aux = arr[i];
+				arr[i] = arr[i + 1];
+				arr[i + 1] = aux;
 			}
 			i++;
 		}
-		flag = check_order(data);
+		flag = check_order(data, arr);
 	}
 }
 
@@ -72,15 +74,15 @@ void	sort_sprite(t_data *data)
 ** the screen) because it prevents fisheye
 */
 
-void	transform_sprite(t_data *data, t_player *player, int i)
+void	transform_sprite(t_data *data, t_player *player, int i, double **arr)
 {
 	double	det_inv;
 	int		screen;
 	int		x;
 
 	det_inv = invdet(player);
-	data->spr.sprx = data->spr.arr[i][1] - player->pos.x;
-	data->spr.spry = data->spr.arr[i][2] - player->pos.y;
+	data->spr.sprx = arr[i][1] - player->pos.x;
+	data->spr.spry = arr[i][2] - player->pos.y;
 	data->spr.trnx = det_inv * (player->dir.y * data->spr.sprx
 		- player->dir.x * data->spr.spry);
 	data->spr.trny = det_inv * (player->cam_plane.x * data->spr.spry

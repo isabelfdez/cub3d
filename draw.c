@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/30 17:52:28 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/07 20:25:46 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/08 17:31:02 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	openwindow(t_data *data)
 void	draw_screen(t_data *data, t_player *player)
 {
 	int		x;
+	double	**arr;
 
 	x = -1;
 	while (++x < data->resx)
@@ -37,10 +38,14 @@ void	draw_screen(t_data *data, t_player *player)
 		verline_tex(x, data, player);
 	}
 	x = -1;
-	calculations_sprite(data, player);
-	sort_sprite(data);
+	arr = calculations_sprite(data, player);
+	sort_sprite(data, arr);
 	while (++x < data->spr.num)
-		transform_sprite(data, player, x);
+		transform_sprite(data, player, x, arr);
+	x = -1;
+	while (++x < data->spr.num)
+		free(*(arr + x));
+	free(arr);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr,
 		data->image.img, 0, 0);
 }

@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/09/07 20:38:54 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/08 17:36:09 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 // Como el player->hit solo aumenta si hemos chocado con un 1, igual puede atravesar
 // sprites
 
-int	main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
 	char    *file;
 	int     fd;
@@ -747,10 +747,7 @@ void	key_manager(t_data *data)
 	if (data->key.arrow_left == 1)
 		rotate_left(data);
 	if (find_key_pressed(data))
-	{
-		system("leaks cub3D");
 		draw_screen(data, data->player);
-	}
 }
 
 void	move_towards(t_data *data)
@@ -785,7 +782,6 @@ void	move_backwards(t_data *data)
 	y = player->pos.y - M_SPEED2 * player->dir.y;
 	if (x < data->c && y < data->l && data->map[y][x] == '0')
 		data->player->pos.y -= M_SPEED2 * player->dir.y;
-	system("leaks cub3D");
 }
 
 void	move_right(t_data *data)

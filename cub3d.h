@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/04 18:56:11 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/08 17:27:15 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,9 @@ int		get_tex_color(t_data *data, int texx, int texy);
 int		texture_number(t_data *data);
 void	draw_textures(t_data *data, int *arr, int tex[], double pos[]);
 
-void	calculations_sprite(t_data *data, t_player *player);
-void	sort_sprite(t_data *data);
-void	transform_sprite(t_data *data, t_player *player, int i);
+double	**calculations_sprite(t_data *data, t_player *player);
+void	sort_sprite(t_data *data, double **arr);
+void	transform_sprite(t_data *data, t_player *player, int i, double **arr);
 void	draw_sprite(t_data *data, int x, int screen);
 int		get_tex_color_sprite(t_data *data, int texx, int texy);
 

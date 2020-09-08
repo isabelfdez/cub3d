@@ -6,13 +6,13 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 16:16:54 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/04 16:22:47 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/08 17:26:00 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 
-char	check_order(t_data *data)
+char	check_order(t_data *data, double **arr)
 {
 	int		i;
 	char	flag;
@@ -21,7 +21,7 @@ char	check_order(t_data *data)
 	flag = 'V';
 	while (i < data->spr.num - 1)
 	{
-		if (data->spr.arr[i][3] < data->spr.arr[i + 1][3])
+		if (arr[i][3] < arr[i + 1][3])
 			flag = 'F';
 		i++;
 	}

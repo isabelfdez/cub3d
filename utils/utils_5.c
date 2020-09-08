@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 16:16:08 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/04 20:01:57 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/08 17:15:39 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,10 @@ int		check_colors(t_data *data)
 }
 
 void	exit_program_data(t_data *data, int i)
-{
+{	
+	int		x;
+
+	x = -1;
 	if (i == 1)
 		ft_putstr_fd("Error\nInvalid arguments", 2);
 	if (i == 2)
@@ -95,6 +98,15 @@ void	exit_program_data(t_data *data, int i)
 		ft_putstr_fd("Error\nInvalid texture", 2);
 	if (i == 4)
 		ft_putstr_fd("Error\nInvalid sprite texture", 2);
+	/*free(data->spr.buff);
+	while (++x < data->l)
+	{
+		free(*(data->map + x));
+		free(*(data->map2 + x));
+	}
+	free(data->map);
+	free(data->map2);
+	free(data->player);*/
 	free(data);
 	exit(EXIT_FAILURE);
 }
