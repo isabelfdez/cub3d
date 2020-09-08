@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/03 17:38:41 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/08 17:33:04 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/08 20:44:29 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ double	**calculations_sprite(t_data *data, t_player *pyr)
 	l = 0;
 	arr = (double **)malloc(sizeof(double *) * data->spr.num);
 	while (++i < data->spr.num)
-		arr[i] = (double *) malloc((sizeof(double)) * 4);
+		arr[i] = (double *)malloc((sizeof(double)) * 4);
 	i = 0;
 	while (++l < data->l && i < data->spr.num)
 	{

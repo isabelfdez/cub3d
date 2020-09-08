@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/30 17:52:28 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/08 17:31:02 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/08 20:36:16 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void	draw_screen(t_data *data, t_player *player)
 	while (++x < data->spr.num)
 		free(*(arr + x));
 	free(arr);
+	if (data->save == 1)
+		save_bmp(data);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr,
 		data->image.img, 0, 0);
 }

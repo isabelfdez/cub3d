@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 16:18:08 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/08 17:25:48 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/08 20:29:39 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,8 @@ typedef	struct	s_player
 
 typedef struct	s_data
 {
+	int			save;
+	char		*save_str;
 	int			resx;
 	int			resy;
 	t_col		floor;

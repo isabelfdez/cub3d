@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/09/08 17:36:09 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/08 20:34:36 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,10 @@ int		main(int argc, char **argv)
 			free(str);
 		}
 	}
-	ft_readfile(aux);
+	ft_readfile(aux, argc, argv);
 }
 
-void	ft_readfile(char *aux)
+void	ft_readfile(char *aux, int argc, char **argv)
 {
 	t_data	*data;
 	int		j;
@@ -70,6 +70,12 @@ void	ft_readfile(char *aux)
 	i = 7;
 	if (!(data = malloc(sizeof(t_data))))
 		return ; /* Aquí hay que ver qué hacemos */
+	data->save = 0;
+	if (argc == 3)
+	{
+		data->save = 1;
+		data->save_str = argv[2];
+	}
 	data->tex_w = TEX_W;
 	data->tex_h = TEX_H;
 	initialize_keys(data);

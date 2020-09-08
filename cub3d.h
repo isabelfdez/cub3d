@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/08 17:27:15 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/08 20:36:29 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 # define R_SPEED 0.05
 
 char	*ft_gnlcub(char **argv);
-void	ft_readfile(char *aux);
+void	ft_readfile(char *aux, int argc, char **argv);
 int		ft_resolution(char *aux, int i, t_data *data);
 int		ft_floorcol(char *aux, int i, t_data *data);
 int		ft_ceilcol(char *aux, int i, t_data *data);
@@ -68,6 +68,12 @@ int		*draw_line(t_player *player, t_data *data);
 void	openwindow(t_data *data);
 void	draw_screen(t_data *data, t_player *player);
 void	my_mlx_pixel_put(t_image *data, int x, int y, int color);
+
+int		get_color(t_data *data, int x, int y);
+int		write_bmp_data(int file, t_data *data, int pad);
+void	set_int_in_char(unsigned char *start, int value);
+int		write_bmp_header(int fd, int size, t_data *data);
+void	save_bmp(t_data *data);
 
 void	verline_tex(int x, t_data *data, t_player *player);
 int		get_tex_color(t_data *data, int texx, int texy);

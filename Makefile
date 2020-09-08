@@ -6,11 +6,11 @@
 #    By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/09/03 17:42:48 by isfernan          #+#    #+#              #
-#    Updated: 2020/09/04 18:48:55 by isfernan         ###   ########.fr        #
+#    Updated: 2020/09/08 20:36:47 by isfernan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS =	cub3d.c	draw.c	textures.c	sprites.c	\
+SRCS =	cub3d.c	draw.c	textures.c	sprites.c	screenshot.c \
 		./utils/*.c		./libft/*.c			./get_next_line/*.c	\
 
 OBJS = ${SRCS:.c=.o}

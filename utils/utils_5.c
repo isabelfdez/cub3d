@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 16:16:08 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/08 17:15:39 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/08 19:56:17 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,9 @@ void	exit_program_data(t_data *data, int i)
 		ft_putstr_fd("Error\nInvalid texture", 2);
 	if (i == 4)
 		ft_putstr_fd("Error\nInvalid sprite texture", 2);
+	if (i == 7)
+		ft_putstr_fd("Error\nInvalid .bmp file", 2);
+
 	/*free(data->spr.buff);
 	while (++x < data->l)
 	{
