@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 16:16:54 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/08 17:26:00 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/09 18:52:12 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,26 @@ double	invdet(t_player *player)
 	nb = 1.0 / (player->cam_plane.x * player->dir.y -
 		player->cam_plane.y * player->dir.x);
 	return (nb);
+}
+
+void	exit_progr(int n)
+{
+	if (n == 1)
+		ft_putstr_fd("Error\nInvalid arguments", 2);
+	if (n == 2)
+		ft_putstr_fd("Error\n.cub file doesn't exist", 2);
+	exit(EXIT_FAILURE);
+}
+
+int		initial_checks(int argc, char **argv)
+{
+	char    *file;
+	int		fd;
+
+	if (argc < 2)
+		exit_progr(1);
+	file = argv[1];
+	if ((fd = open(file, O_RDONLY)) == -1)
+		exit_progr(2);
+	return (fd);
 }

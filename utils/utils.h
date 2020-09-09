@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 16:18:08 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/08 20:29:39 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/09 19:44:02 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,6 @@ typedef struct	s_data
 	int			resy;
 	t_col		floor;
 	t_col		ceil;
-	char		*floor_col;
 	int			f_c;
 	char		*ceil_col;
 	int			c_c;
@@ -187,5 +186,8 @@ void			exit_program_data(t_data *data, int i);
 char			check_order(t_data *data, double **arr);
 int				number_base(char *str);
 double			invdet(t_player *player);
+void			exit_progr(int n);
+int				initial_checks(int argc, char **argv);
+
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/24 19:39:56 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/08 20:36:29 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/09 19:57:59 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,19 @@
 # define M_SPEED2 0.05
 # define R_SPEED 0.05
 
+
+typedef struct	s_str
+{
+	char	*str1;
+	char	*str2;
+	char	*str3;
+	char	*str4;
+}				t_str;
+
 char	*ft_gnlcub(char **argv);
 void	ft_readfile(char *aux, int argc, char **argv);
+int		get_data(char *aux, t_data *data, int i);
+
 int		ft_resolution(char *aux, int i, t_data *data);
 int		ft_floorcol(char *aux, int i, t_data *data);
 int		ft_ceilcol(char *aux, int i, t_data *data);
