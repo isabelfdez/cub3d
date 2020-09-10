@@ -6,13 +6,14 @@
 #    By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/09/03 17:42:48 by isfernan          #+#    #+#              #
-#    Updated: 2020/09/09 19:30:26 by isfernan         ###   ########.fr        #
+#    Updated: 2020/09/10 17:50:42 by isfernan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS =	cub3d.c	draw.c	textures.c	sprites.c	screenshot.c	inputs.c \
 		./utils/*.c		./libft/*.c			./get_next_line/*.c	\
-		inputs2.c
+		inputs2.c	create_map.c	check_map.c	raycasting.c	press_key.c \
+		movement.c	managers.c		release_key.c
 
 OBJS = ${SRCS:.c=.o}
 

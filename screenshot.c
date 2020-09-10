@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 20:35:55 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/08 20:41:22 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/10 18:31:23 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	save_bmp(t_data *data)
 	int		size;
 	int		pad;
 
+	system("killall afplay");
 	if (ft_strlen(data->save_str) != 6 || (ft_strncmp(data->save_str,
 		"--save", 6)) != 0)
 		exit_program_data(data, 1);

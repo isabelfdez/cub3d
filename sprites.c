@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/03 17:38:41 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/08 20:44:29 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/10 18:00:44 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,27 @@
 
 double	**calculations_sprite(t_data *data, t_player *pyr)
 {
-	int		i;
-	int		c;
-	int		l;
+	t_int	k;
 	double	**arr;
 
-	i = -1;
-	l = 0;
+	k.i = -1;
+	k.l = 0;
 	arr = (double **)malloc(sizeof(double *) * data->spr.num);
-	while (++i < data->spr.num)
-		arr[i] = (double *)malloc((sizeof(double)) * 4);
-	i = 0;
-	while (++l < data->l && i < data->spr.num)
+	while (++k.i < data->spr.num)
+		arr[k.i] = (double *)malloc((sizeof(double)) * 4);
+	k.i = 0;
+	while (++k.l < data->l && k.i < data->spr.num)
 	{
-		c = 0;
-		while (++c < data->c && i < data->spr.num)
-			if (data->map[l][c] == '2')
+		k.c = 0;
+		while (++k.c < data->c && k.i < data->spr.num)
+			if (data->map[k.l][k.c] == '2')
 			{
-				arr[i][0] = i;
-				arr[i][1] = (double)c + 0.5;
-				arr[i][2] = (double)l + 0.5;
-				arr[i][3] = pow(pyr->pos.x - arr[i][1], 2)
-					+ pow(pyr->pos.y - arr[i][2], 2);
-				i++;
+				arr[k.i][0] = k.i;
+				arr[k.i][1] = (double)k.c + 0.5;
+				arr[k.i][2] = (double)k.l + 0.5;
+				arr[k.i][3] = pow(pyr->pos.x - arr[k.i][1], 2)
+					+ pow(pyr->pos.y - arr[k.i][2], 2);
+				k.i++;
 			}
 	}
 	return (arr);

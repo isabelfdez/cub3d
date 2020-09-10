@@ -1,7 +1,7 @@
 R     1100 800
 
 NO  ./textures/bluestone.xpm
-SO ./textures/eagle.xpm
+SO ./textures/among_us.xpm
 EA  ./textures/wall_1.xpm
 WE   ./textures/wall_2.xpm
 
@@ -9,7 +9,7 @@ WE   ./textures/wall_2.xpm
 S ./textures/sprite_3.xpm
 
 F   0,  100,40
-C 0,80  ,100
+C 76,155  ,252
 
 
         1111111111111111111111111

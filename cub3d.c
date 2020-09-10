@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/26 13:55:12 by marvin            #+#    #+#             */
-/*   Updated: 2020/09/09 20:46:52 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/10 19:48:01 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int		main(int argc, char **argv)
 	char	*aux;
 	char	*aux2;
 
+	system("afplay pvsz.mp3 &");
 	fd = initial_checks(argc, argv);
 	while (get_next_line(fd, &str))
 	{
@@ -93,5 +94,6 @@ int		get_data(char *aux, t_data *data, int i)
 			j = ft_sprtex(aux, j + 1, data);
 		i--;
 	}
+	check_colors(data);
 	return (j);
 }

@@ -6,7 +6,7 @@
 /*   By: isfernan <isfernan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 16:16:08 by isfernan          #+#    #+#             */
-/*   Updated: 2020/09/09 18:46:28 by isfernan         ###   ########.fr       */
+/*   Updated: 2020/09/10 16:38:37 by isfernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,21 +68,20 @@ void	count_sprites(t_data *data)
 	}
 }
 
-int		check_colors(t_data *data)
+void	check_colors(t_data *data)
 {
 	if (data->floor.r < 0 || data->floor.r > 255)
-		return (0);
+		exit_program_data(data, 2);
 	if (data->floor.g < 0 || data->floor.g > 255)
-		return (0);
+		exit_program_data(data, 2);
 	if (data->floor.b < 0 || data->floor.b > 255)
-		return (0);
+		exit_program_data(data, 2);
 	if (data->ceil.r < 0 || data->ceil.r > 255)
-		return (0);
+		exit_program_data(data, 2);
 	if (data->ceil.g < 0 || data->ceil.g > 255)
-		return (0);
+		exit_program_data(data, 2);
 	if (data->ceil.b < 0 || data->ceil.b > 255)
-		return (0);
-	return (1);
+		exit_program_data(data, 2);
 }
 
 void	exit_program_data(t_data *data, int i)
@@ -98,9 +97,12 @@ void	exit_program_data(t_data *data, int i)
 		ft_putstr_fd("Error\nInvalid texture", 2);
 	if (i == 4)
 		ft_putstr_fd("Error\nInvalid sprite texture", 2);
+	if (i == 5)
+		ft_putstr_fd("Error\nInvalid map", 2);
+	if (i == 6)
+		ft_putstr_fd("Error\nCharacter outside of closed space", 2);
 	if (i == 7)
 		ft_putstr_fd("Error\nInvalid .bmp file", 2);
-
 	/*free(data->spr.buff);
 	while (++x < data->l)
 	{
