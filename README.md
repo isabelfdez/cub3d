@@ -2,6 +2,8 @@
 
 The aim of cub3d is to make a simple videogame using raycasting (similar [Wolfenstein 3D](https://en.wikipedia.org/wiki/Wolfenstein_3D)).
 
+<img width="1102" alt="Screen Shot 2022-11-02 at 7 34 09 PM" src="https://user-images.githubusercontent.com/46970685/199574436-64a3a2c4-3a8c-45f5-9a59-706ebb2a51e0.png">
+
 
 
 ## Characteristics
