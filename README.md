@@ -13,6 +13,15 @@ The aim of cub3d is to make a simple videogame using raycasting (similar [Wolfen
 * Textures or colors for each sides (North, South, West, East) and Sky/Floor
 * Obstacles in the map
 
+## Usage
+
+Execute the following:
+```
+make
+./cub3D <name of the test>
+```
+`name of the test` can either be `test1.cub` or `test2.cub`, or yu can even create one yourself! Note that you need to have minilibx installed in order to execute 
+
 ## Status
 
 Finished :white_check_mark:
