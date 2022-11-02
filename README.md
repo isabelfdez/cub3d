@@ -20,7 +20,7 @@ Execute the following:
 make
 ./cub3D <name of the test>
 ```
-`name of the test` can either be `test1.cub` or `test2.cub`, or yu can even create one yourself! Note that you need to have minilibx installed in order to execute 
+`name of the test` can either be `test1.cub` or `test2.cub`, or you can even create one yourself! Note that you need to have minilibx installed in order to execute 
 
 ## Status
 
